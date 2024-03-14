@@ -1,3 +1,3 @@
 class Asset < ApplicationRecord
-  belongs_to :fund
+  alias_attribute :asset_class, :type
 end
