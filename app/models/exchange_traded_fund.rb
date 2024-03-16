@@ -1,0 +1,2 @@
+class ExchangeTradedFund < Asset
+end

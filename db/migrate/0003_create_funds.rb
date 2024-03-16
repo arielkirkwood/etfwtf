@@ -4,7 +4,8 @@ class CreateFunds < ActiveRecord::Migration[7.1]
       t.string :name
       t.string :public_url
       t.string :holdings_url
-      t.references :asset, null: false, foreign_key: true
+      t.belongs_to :underlying_asset, null: false, foreign_key: { to_table: :assets }
+      t.belongs_to :manager, null: false, foreign_key: { to_table: :assets_managers }
 
       t.timestamps
     end

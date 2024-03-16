@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_14_015557) do
+ActiveRecord::Schema[7.1].define(version: 4) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -23,26 +23,36 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_14_015557) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "assets_managers", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "funds", force: :cascade do |t|
     t.string "name"
     t.string "public_url"
     t.string "holdings_url"
-    t.bigint "asset_id", null: false
+    t.bigint "underlying_asset_id", null: false
+    t.bigint "manager_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["asset_id"], name: "index_funds_on_asset_id"
+    t.index ["manager_id"], name: "index_funds_on_manager_id"
+    t.index ["underlying_asset_id"], name: "index_funds_on_underlying_asset_id"
   end
 
   create_table "holdings", force: :cascade do |t|
     t.bigint "fund_id", null: false
     t.bigint "asset_id", null: false
+    t.date "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["asset_id"], name: "index_holdings_on_asset_id"
     t.index ["fund_id"], name: "index_holdings_on_fund_id"
   end
 
-  add_foreign_key "funds", "assets"
+  add_foreign_key "funds", "assets", column: "underlying_asset_id"
+  add_foreign_key "funds", "assets_managers", column: "manager_id"
   add_foreign_key "holdings", "assets"
   add_foreign_key "holdings", "funds"
 end
