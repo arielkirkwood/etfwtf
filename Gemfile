@@ -2,6 +2,11 @@ source "https://rubygems.org"
 
 ruby "3.3.0"
 
+# Domain level dependencies
+gem "money-rails", "~> 1.15"
+
+# Application/infrastructure level dependencies
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.3", ">= 7.1.3.2"
 
@@ -46,6 +51,7 @@ gem "bootsnap", require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem "bundler-audit", "~> 0.9.1"
   gem "debug", platforms: %i[ mri windows ]
 end
 
@@ -66,4 +72,3 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "money-rails", "~> 1.15"
