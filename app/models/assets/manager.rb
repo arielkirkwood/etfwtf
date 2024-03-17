@@ -2,6 +2,6 @@
 
 module Assets
   class Manager < ApplicationRecord
-    has_many :funds
+    has_many :funds, dependent: :destroy
   end
 end

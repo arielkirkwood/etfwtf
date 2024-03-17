@@ -56,7 +56,7 @@ group :development, :test do
   gem 'brakeman', '~> 6.1'
   gem 'bundler-audit', '~> 0.9.1'
   gem 'debug', platforms: [:mri, :windows]
-  gem 'rubocop', '~> 1.62'
+  gem 'rubocop-rails', '~> 2.24'
 end
 
 group :development do
