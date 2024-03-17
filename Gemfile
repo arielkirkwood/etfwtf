@@ -52,6 +52,7 @@ gem "bootsnap", require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "bundler-audit", "~> 0.9.1"
+  gem "brakeman", "~> 6.1"
   gem "debug", platforms: %i[ mri windows ]
 end
 
@@ -71,4 +72,3 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-
