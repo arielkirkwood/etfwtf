@@ -2,7 +2,7 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-  ishares = Assets::Manager.find_or_create_by!(name: 'iShares')
+  ishares = Assets::Manager.find_or_create_by!(name: 'iShares', fund_holdings_file_format: 'csv')
   crbn_asset = Asset.find_or_create_by!(name: 'iShares MSCI ACWI Low Carbon Target ETF',
                                         type: 'ExchangeTradedFund',
                                         ticker: 'CRBN',
@@ -22,7 +22,7 @@
                    underlying_asset: bgrn_asset,
                    manager: ishares)
 
-  state_street = Assets::Manager.find_or_create_by!(name: 'State Street')
+  state_street = Assets::Manager.find_or_create_by!(name: 'State Street', fund_holdings_file_format: 'xlsx')
   spyx_asset = Asset.find_or_create_by!(name: 'SPDR® S&P® 500 Fossil Fuel Reserves Free ETF',
                                         type: 'ExchangeTradedFund',
                                         ticker: 'SPYX',

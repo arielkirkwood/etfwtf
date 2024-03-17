@@ -15,24 +15,25 @@ ActiveRecord::Schema[7.1].define(version: 4) do
   enable_extension "plpgsql"
 
   create_table "assets", force: :cascade do |t|
-    t.string "name"
-    t.string "type"
-    t.string "ticker"
+    t.string "name", null: false
+    t.string "type", null: false
+    t.string "ticker", null: false
     t.string "sector"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "assets_managers", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
+    t.string "fund_holdings_file_format", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "funds", force: :cascade do |t|
-    t.string "name"
-    t.string "public_url"
-    t.string "holdings_url"
+    t.string "name", null: false
+    t.string "public_url", null: false
+    t.string "holdings_url", null: false
     t.bigint "underlying_asset_id", null: false
     t.bigint "manager_id", null: false
     t.datetime "created_at", null: false
@@ -44,7 +45,12 @@ ActiveRecord::Schema[7.1].define(version: 4) do
   create_table "holdings", force: :cascade do |t|
     t.bigint "fund_id", null: false
     t.bigint "asset_id", null: false
-    t.date "date"
+    t.date "date", null: false
+    t.decimal "quantity", default: "0.0", null: false
+    t.integer "price_cents", default: 0, null: false
+    t.string "price_currency", default: "USD", null: false
+    t.integer "market_price_cents", default: 0, null: false
+    t.string "market_price_currency", default: "USD", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["asset_id"], name: "index_holdings_on_asset_id"

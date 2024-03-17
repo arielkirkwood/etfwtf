@@ -1,5 +1,7 @@
 class Holding < ApplicationRecord
+  belongs_to :asset
   belongs_to :fund
 
-  has_many :assets, through: :assets_holdings
+  monetize :market_price_cents
+  monetize :price_cents
 end
