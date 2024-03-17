@@ -12,7 +12,6 @@
                    holdings_url: 'https://www.ishares.com/us/products/271054/fund/1467271812596.ajax?fileType=csv&fileName=CRBN_holdings&dataType=fund',
                    underlying_asset: crbn_asset,
                    manager: ishares)
-  crbn_fund.save
   bgrn_asset = Asset.find_or_create_by!(name: 'iShares USD Green Bond ETF',
                                         type: 'ExchangeTradedFund',
                                         ticker: 'BGRN',
@@ -22,7 +21,6 @@
                    holdings_url: 'https://www.ishares.com/us/products/305296/fund/1467271812596.ajax?fileType=csv&fileName=BGRN_holdings&dataType=fund',
                    underlying_asset: bgrn_asset,
                    manager: ishares)
-  bgrn_fund.save
 
   state_street = Assets::Manager.find_or_create_by!(name: 'State Street')
   spyx_asset = Asset.find_or_create_by!(name: 'SPDR® S&P® 500 Fossil Fuel Reserves Free ETF',
@@ -32,6 +30,9 @@
   spyx_fund = Fund.find_or_initialize_by(name: 'SPDR® S&P® 500 Fossil Fuel Reserves Free ETF')
   spyx_fund.update(public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-sp-500-fossil-fuel-reserves-free-etf-spyx',
                    holdings_url: 'https://www.ssga.com/us/en/individual/etfs/library-content/products/fund-data/etfs/us/holdings-daily-us-en-spyx.xlsx',
-                   underlying_asset: crbn_asset,
+                   underlying_asset: spyx_asset,
                    manager: state_street)
+
+  crbn_fund.save
+  bgrn_fund.save
   spyx_fund.save
