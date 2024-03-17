@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Fund < ApplicationRecord
   belongs_to :manager, class_name: 'Assets::Manager'
   belongs_to :underlying_asset, class_name: 'Asset'

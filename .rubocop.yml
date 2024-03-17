@@ -1,0 +1,10 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  NewCops: enable
+
+Layout/LineLength:
+  Max: 198
+
+Style/SymbolArray:
+  EnforcedStyle: brackets

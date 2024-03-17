@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Holding < ApplicationRecord
   belongs_to :asset
   belongs_to :fund
