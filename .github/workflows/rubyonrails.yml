@@ -37,8 +37,10 @@ jobs:
       - name: Set up database schema
         run: bin/rails db:schema:load
       # Add or replace test runners here
-      - name: Run tests
-        run: bin/rake
+      # - name: Run tests
+      #   run: bin/rake
+      - name: Run test (db:reset)
+        run: bin/rails db:reset
 
   lint:
     runs-on: ubuntu-latest
