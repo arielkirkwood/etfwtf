@@ -25,10 +25,10 @@ module Holdings
 
     def strategy_class
       @strategy_class ||= case holdings_file
-                          when Holdings::CSVFile
-                            CSVExtractionStrategy
+                          when CSVFile
+                            Holdings::Extraction::CSVStrategy
                           when ::Mechanize::XmlFile
-                            XLSXExtractionStrategy
+                            Holdings::Extraction::ExcelOpenStrategy
                           else
                             raise UnknownStrategyError, holdings_file.class
                           end
