@@ -19,7 +19,7 @@ module Holdings
 
       private
 
-      def asset_type(asset_class)
+      def asset_type(asset_class) # rubocop:disable Metrics/MethodLength
         case asset_class
         when 'Bond', 'Fixed Income'
           'Bond'
