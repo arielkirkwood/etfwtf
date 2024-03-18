@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 ruby '3.3.0'
 
 # Domain level dependencies
+gem 'mechanize', '~> 2.10'
 gem 'money-rails', '~> 1.15'
 
 # Application/infrastructure level dependencies

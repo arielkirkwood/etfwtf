@@ -19,7 +19,7 @@ ActiveRecord::Schema[7.1].define(version: 4) do
   create_table 'assets', force: :cascade do |t|
     t.string 'name', null: false
     t.string 'type', null: false
-    t.string 'ticker', null: false
+    t.string 'ticker'
     t.string 'sector'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
@@ -27,7 +27,6 @@ ActiveRecord::Schema[7.1].define(version: 4) do
 
   create_table 'assets_managers', force: :cascade do |t|
     t.string 'name', null: false
-    t.string 'fund_holdings_file_format', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
   end
@@ -53,9 +52,11 @@ ActiveRecord::Schema[7.1].define(version: 4) do
     t.string 'price_currency', default: 'USD', null: false
     t.integer 'market_price_cents', default: 0, null: false
     t.string 'market_price_currency', default: 'USD', null: false
+    t.date 'accrual_date'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.index ['asset_id'], name: 'index_holdings_on_asset_id'
+    t.index ['fund_id', 'asset_id', 'date', 'accrual_date'], name: 'idx_on_fund_id_asset_id_date_accrual_date_094ebc48ae', unique: true
     t.index ['fund_id'], name: 'index_holdings_on_fund_id'
   end
 

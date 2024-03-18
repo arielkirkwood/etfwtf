@@ -4,7 +4,7 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-ishares = Assets::Manager.find_or_create_by!(name: 'iShares', fund_holdings_file_format: 'csv')
+ishares = Assets::Manager.find_or_create_by!(name: 'iShares')
 crbn_asset = Asset.find_or_create_by!(name: 'iShares MSCI ACWI Low Carbon Target ETF',
                                       type: 'ExchangeTradedFund',
                                       ticker: 'CRBN',
@@ -24,7 +24,7 @@ bgrn_fund.update(public_url: 'https://www.ishares.com/us/products/305296/',
                  underlying_asset: bgrn_asset,
                  manager: ishares)
 
-state_street = Assets::Manager.find_or_create_by!(name: 'State Street', fund_holdings_file_format: 'xlsx')
+state_street = Assets::Manager.find_or_create_by!(name: 'State Street')
 spyx_asset = Asset.find_or_create_by!(name: 'SPDR® S&P® 500 Fossil Fuel Reserves Free ETF',
                                       type: 'ExchangeTradedFund',
                                       ticker: 'SPYX',
@@ -35,6 +35,6 @@ spyx_fund.update(public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/s
                  underlying_asset: spyx_asset,
                  manager: state_street)
 
-crbn_fund.save
+crbn_fund.holdings_extractor.update_holdings
 bgrn_fund.save
 spyx_fund.save
