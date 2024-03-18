@@ -20,7 +20,7 @@ module Holdings
     private
 
     def extract_holdings
-      strategy_class.new(fund, holdings_file).extract
+      strategy_class.new(fund).extract(holdings_file)
     end
 
     def strategy_class
@@ -30,7 +30,7 @@ module Holdings
                           when ::Mechanize::XmlFile
                             XLSXExtractionStrategy
                           else
-                            raise UnknownStrategyError
+                            raise UnknownStrategyError, holdings_file.class
                           end
     end
 

@@ -2,7 +2,7 @@
 
 module Holdings
   class CSVExtractionStrategy < ExtractionStrategy
-    def extract
+    def extract(file)
       Holding.transaction do
         file.csv.map do |row|
           asset = Asset.find_or_create_by!(type: asset_type(row[:asset_class]), ticker: row[:ticker], name: row[:name], sector: row[:sector])

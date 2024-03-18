@@ -2,11 +2,10 @@
 
 module Holdings
   class ExtractionStrategy
-    attr_accessor :fund, :file
+    attr_accessor :fund
 
-    def initialize(fund, file)
+    def initialize(fund)
       @fund = fund
-      @file = file
     end
   end
 end
