@@ -35,6 +35,6 @@ spyx_fund.update(public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/s
                  underlying_asset: spyx_asset,
                  manager: state_street)
 
-crbn_fund.holdings_extractor.update_holdings
+crbn_fund.extract_holdings
 bgrn_fund.save
 spyx_fund.save

@@ -17,10 +17,11 @@ ActiveRecord::Schema[7.1].define(version: 1) do
   create_table "assets", force: :cascade do |t|
     t.string "name", null: false
     t.string "type", null: false
-    t.string "ticker"
+    t.string "ticker", null: false
     t.string "sector"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name", "ticker"], name: "index_assets_on_name_and_ticker", unique: true
   end
 
   create_table "assets_managers", force: :cascade do |t|

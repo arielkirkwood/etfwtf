@@ -10,16 +10,18 @@ module Holdings
 
     def initialize(fund)
       @fund = fund
-      @holdings = extract_holdings
     end
 
-    def update_holdings
-      fund.save if holdings.any?
+    def extract_holdings
+      Holding.transaction do
+        self.holdings = holdings_via_strategy
+        fund.save if holdings.any?
+      end
     end
 
     private
 
-    def extract_holdings
+    def holdings_via_strategy
       strategy_class.new(fund).extract(holdings_file)
     end
 

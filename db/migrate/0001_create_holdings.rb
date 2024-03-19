@@ -11,9 +11,10 @@ class CreateHoldings < ActiveRecord::Migration[7.1]
     create_table :assets do |t|
       t.string :name, null: false
       t.string :type, null: false
-      t.string :ticker
+      t.string :ticker, null: false
       t.string :sector
 
+      t.index [:name, :ticker], unique: true
       t.timestamps
     end
 

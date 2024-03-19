@@ -7,6 +7,10 @@ class Fund < ApplicationRecord
   has_many :holdings, dependent: :destroy
   has_many :assets, through: :holdings
 
+  delegate :extract_holdings, to: :holdings_extractor
+
+  private
+
   def holdings_extractor
     @holdings_extractor ||= Holdings::Extractor.new(self)
   end
