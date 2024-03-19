@@ -11,10 +11,17 @@ class CreateHoldings < ActiveRecord::Migration[7.1]
     create_table :assets do |t|
       t.string :name, null: false
       t.string :type, null: false
-      t.string :ticker, null: false
       t.string :sector
 
-      t.index [:name, :ticker], unique: true
+      t.timestamps
+    end
+
+    create_table :assets_identities do |t|
+      t.references :asset, null: false, foreign_key: true
+      t.string :type, null: false
+      t.string :identifier, null: false
+
+      t.index [:asset_id, :identifier], unique: true
       t.timestamps
     end
 
@@ -33,7 +40,8 @@ class CreateHoldings < ActiveRecord::Migration[7.1]
       t.references :asset, null: false, foreign_key: true
       t.date :date, null: false
       t.decimal :quantity, default: 0, null: false
-      t.monetize :price
+      t.monetize :notional_value, null: false
+      t.monetize :unit_price
       t.monetize :market_price
       t.date :accrual_date
 

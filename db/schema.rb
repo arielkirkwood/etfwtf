@@ -17,11 +17,19 @@ ActiveRecord::Schema[7.1].define(version: 1) do
   create_table "assets", force: :cascade do |t|
     t.string "name", null: false
     t.string "type", null: false
-    t.string "ticker", null: false
     t.string "sector"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name", "ticker"], name: "index_assets_on_name_and_ticker", unique: true
+  end
+
+  create_table "assets_identities", force: :cascade do |t|
+    t.bigint "asset_id", null: false
+    t.string "type", null: false
+    t.string "identifier", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_id", "identifier"], name: "index_assets_identities_on_asset_id_and_identifier", unique: true
+    t.index ["asset_id"], name: "index_assets_identities_on_asset_id"
   end
 
   create_table "assets_managers", force: :cascade do |t|
@@ -47,8 +55,10 @@ ActiveRecord::Schema[7.1].define(version: 1) do
     t.bigint "asset_id", null: false
     t.date "date", null: false
     t.decimal "quantity", default: "0.0", null: false
-    t.integer "price_cents", default: 0, null: false
-    t.string "price_currency", default: "USD", null: false
+    t.integer "notional_value_cents", default: 0, null: false
+    t.string "notional_value_currency", default: "USD", null: false
+    t.integer "unit_price_cents", default: 0, null: false
+    t.string "unit_price_currency", default: "USD", null: false
     t.integer "market_price_cents", default: 0, null: false
     t.string "market_price_currency", default: "USD", null: false
     t.date "accrual_date"
@@ -59,6 +69,7 @@ ActiveRecord::Schema[7.1].define(version: 1) do
     t.index ["fund_id"], name: "index_holdings_on_fund_id"
   end
 
+  add_foreign_key "assets_identities", "assets"
   add_foreign_key "funds", "assets", column: "underlying_asset_id"
   add_foreign_key "funds", "assets_managers", column: "manager_id"
   add_foreign_key "holdings", "assets"

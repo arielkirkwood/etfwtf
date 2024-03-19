@@ -7,8 +7,8 @@
 ishares = Assets::Manager.find_or_create_by!(name: 'iShares')
 crbn_asset = Asset.find_or_create_by!(name: 'iShares MSCI ACWI Low Carbon Target ETF',
                                       type: 'ExchangeTradedFund',
-                                      ticker: 'CRBN',
                                       sector: 'Global Large-Stock Blend')
+Assets::Ticker.find_or_create_by!(asset: crbn_asset, ticker: 'CRBN')
 crbn_fund = Fund.find_or_initialize_by(name: 'iShares MSCI ACWI Low Carbon Target ETF')
 crbn_fund.update(public_url: 'https://www.ishares.com/us/products/271054/',
                  holdings_url: 'https://www.ishares.com/us/products/271054/fund/1467271812596.ajax?fileType=csv&fileName=CRBN_holdings&dataType=fund',
@@ -16,8 +16,8 @@ crbn_fund.update(public_url: 'https://www.ishares.com/us/products/271054/',
                  manager: ishares)
 bgrn_asset = Asset.find_or_create_by!(name: 'iShares USD Green Bond ETF',
                                       type: 'ExchangeTradedFund',
-                                      ticker: 'BGRN',
                                       sector: 'Global Bond-USD Hedged')
+Assets::Ticker.find_or_create_by!(asset: bgrn_asset, ticker: 'BGRN')
 bgrn_fund = Fund.find_or_initialize_by(name: 'iShares USD Green Bond ETF')
 bgrn_fund.update(public_url: 'https://www.ishares.com/us/products/305296/',
                  holdings_url: 'https://www.ishares.com/us/products/305296/fund/1467271812596.ajax?fileType=csv&fileName=BGRN_holdings&dataType=fund',
@@ -27,8 +27,8 @@ bgrn_fund.update(public_url: 'https://www.ishares.com/us/products/305296/',
 state_street = Assets::Manager.find_or_create_by!(name: 'State Street')
 spyx_asset = Asset.find_or_create_by!(name: 'SPDR® S&P® 500 Fossil Fuel Reserves Free ETF',
                                       type: 'ExchangeTradedFund',
-                                      ticker: 'SPYX',
                                       sector: 'Large Blend')
+Assets::Ticker.find_or_create_by!(asset: spyx_asset, ticker: 'SPYX')
 spyx_fund = Fund.find_or_initialize_by(name: 'SPDR® S&P® 500 Fossil Fuel Reserves Free ETF')
 spyx_fund.update(public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-sp-500-fossil-fuel-reserves-free-etf-spyx',
                  holdings_url: 'https://www.ssga.com/us/en/individual/etfs/library-content/products/fund-data/etfs/us/holdings-daily-us-en-spyx.xlsx',
@@ -36,5 +36,5 @@ spyx_fund.update(public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/s
                  manager: state_street)
 
 crbn_fund.extract_holdings
-bgrn_fund.save
+bgrn_fund.extract_holdings
 spyx_fund.save

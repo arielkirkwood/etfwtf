@@ -15,7 +15,8 @@ module Holdings
     def extract_holdings
       Holding.transaction do
         self.holdings = holdings_via_strategy
-        fund.save if holdings.any?
+
+        fund.save! if holdings.any?
       end
     end
 
