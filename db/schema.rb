@@ -39,11 +39,10 @@ ActiveRecord::Schema[7.1].define(version: 1) do
   end
 
   create_table "funds", force: :cascade do |t|
-    t.string "name", null: false
+    t.bigint "manager_id", null: false
+    t.bigint "underlying_asset_id", null: false
     t.string "public_url", null: false
     t.string "holdings_url", null: false
-    t.bigint "underlying_asset_id", null: false
-    t.bigint "manager_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["manager_id"], name: "index_funds_on_manager_id"

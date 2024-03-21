@@ -8,6 +8,7 @@ class Fund < ApplicationRecord
   has_many :assets, through: :holdings
 
   delegate :extract_holdings, to: :holdings_extractor
+  delegate :name, to: :underlying_asset
 
   private
 
