@@ -5,8 +5,10 @@ source 'https://rubygems.org'
 ruby '3.3.0'
 
 # Domain level dependencies
-gem 'mechanize', '~> 2.10'
-gem 'money-rails', '~> 1.15'
+gem 'mechanize', '~> 2.10' # mechanize fetches remote HTTP resources and handle file types selectively
+gem 'money-rails', '~> 1.15' # money-rails allows handling a pair of money/currency columns as one money object
+gem 'rover-df', '~> 0.3.4' # rover-df enables building a dataframe in Ruby
+gem 'rubyXL', '~> 3.4' # rubyXL parses .xlsx XML files
 
 # Application/infrastructure level dependencies
 
@@ -53,9 +55,9 @@ gem 'bootsnap', require: false
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
-  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'brakeman', '~> 6.1'
   gem 'bundler-audit', '~> 0.9.1'
+  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: [:mri, :windows]
   gem 'rubocop-rails', '~> 2.24'
 end

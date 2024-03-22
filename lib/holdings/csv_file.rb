@@ -4,7 +4,6 @@ require 'csv'
 
 module Holdings
   class CSVFile < Mechanize::File
-    # The underlying CSV object
     attr_reader :date, :csv
 
     def initialize(uri, response = nil, body = nil, code = nil)

@@ -30,7 +30,7 @@ module Holdings
       @strategy_class ||= case holdings_file
                           when CSVFile
                             Holdings::Extraction::CSVStrategy
-                          when ::Mechanize::XmlFile
+                          when ExcelOpenXMLFile
                             Holdings::Extraction::ExcelOpenStrategy
                           else
                             raise UnknownStrategyError, holdings_file.class
@@ -44,7 +44,8 @@ module Holdings
     def agent
       @agent ||= ::Mechanize.new
       @agent.pluggable_parser.csv = CSVFile
-      @agent.pluggable_parser['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] = ::Mechanize::XmlFile
+      @agent.pluggable_parser.xml = ExcelOpenXMLFile
+      @agent.pluggable_parser['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] = ExcelOpenXMLFile
 
       @agent
     end

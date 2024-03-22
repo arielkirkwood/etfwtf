@@ -81,12 +81,6 @@ eemx_fund.update(public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/s
                  holdings_url: 'https://www.ssga.com/us/en/individual/etfs/library-content/products/fund-data/etfs/us/holdings-daily-us-en-eemx.xlsx',
                  manager: state_street)
 
-crbn_fund.extract_holdings
-bgrn_fund.extract_holdings
-ivv_fund.extract_holdings
-stip_fund.extract_holdings
-emb_fund.extract_holdings
-vote_fund.save
-spyx_fund.save
-efax_fund.save
-eemx_fund.save
+# Rails.logger.
+[crbn_fund, bgrn_fund, ivv_fund, stip_fund, emb_fund, spyx_fund].each(&:extract_holdings)
+[vote_fund, efax_fund, eemx_fund].each(&:save)
