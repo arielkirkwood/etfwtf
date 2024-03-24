@@ -8,5 +8,5 @@ class Holding < ApplicationRecord
   delegate :exchange, to: :asset
 
   validates :quantity, numericality: { greater_than_or_equal_to: 0 }
-  validates :price, uniqueness: { scope: [:fund, :date] }
+  validates :price, uniqueness: { scope: [:fund, :quantity, :date] }
 end

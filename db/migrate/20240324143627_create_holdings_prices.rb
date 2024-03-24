@@ -15,7 +15,7 @@ class CreateHoldingsPrices < ActiveRecord::Migration[7.1]
     change_table :holdings do |t|
       t.belongs_to :price, foreign_key: { to_table: :holdings_prices }
 
-      t.index [:price_id, :fund_id, :date], unique: true
+      t.index [:price_id, :fund_id, :quantity, :date], unique: true
     end
   end
 end

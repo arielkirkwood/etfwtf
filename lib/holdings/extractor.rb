@@ -18,7 +18,7 @@ module Holdings
 
         Rails.logger.info("#{fund.name} holdings: #{holdings.count}")
 
-        fund.save if holdings.any?
+        fund.save! if holdings.any?
       end
     end
 

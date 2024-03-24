@@ -67,7 +67,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_24_175339) do
     t.date "accrual_date"
     t.bigint "price_id"
     t.index ["fund_id"], name: "index_holdings_on_fund_id"
-    t.index ["price_id", "fund_id", "date"], name: "index_holdings_on_price_id_and_fund_id_and_date", unique: true
+    t.index ["price_id", "fund_id", "quantity", "date"], name: "index_holdings_on_price_id_and_fund_id_and_quantity_and_date", unique: true
     t.index ["price_id"], name: "index_holdings_on_price_id"
   end
 

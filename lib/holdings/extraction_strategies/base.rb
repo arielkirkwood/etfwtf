@@ -3,7 +3,7 @@
 module Holdings
   module ExtractionStrategies
     class Base
-      attr_accessor :fund
+      attr_reader :fund
 
       def initialize(fund)
         @fund = fund
