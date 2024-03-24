@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class Holding < ApplicationRecord
-  belongs_to :asset
   belongs_to :fund
+  belongs_to :price, class_name: 'Holdings::Price'
 
-  monetize :notional_value_cents
-  monetize :unit_price_cents
-  monetize :market_price_cents
+  delegate :asset, :market_price, :notional_value, :unit_price, to: :price
 end

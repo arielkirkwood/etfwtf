@@ -5,6 +5,10 @@ class Asset < ApplicationRecord
 
   has_one :identity, class_name: 'Assets::Identity', dependent: :destroy
 
+  has_many :prices, class_name: 'Holdings::Price', dependent: :destroy
+
+  validates :sector, length: { minimum: 2 }
+
   alias_attribute :asset_class, :type
   delegate :ticker, :isin, to: :identity
 end

@@ -7,7 +7,6 @@ ruby '3.3.0'
 # Domain level dependencies
 gem 'mechanize', '~> 2.10' # mechanize fetches remote HTTP resources and handle file types selectively
 gem 'money-rails', '~> 1.15' # money-rails allows handling a pair of money/currency columns as one money object
-gem 'rover-df', '~> 0.3.4' # rover-df enables building a dataframe in Ruby
 gem 'rubyXL', '~> 3.4' # rubyXL parses .xlsx XML files
 
 # Application/infrastructure level dependencies

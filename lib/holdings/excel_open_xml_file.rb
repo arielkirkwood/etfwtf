@@ -9,16 +9,10 @@ module Holdings
     def initialize(uri, response = nil, body = nil, code = nil)
       super(uri, response, body, code)
 
-      @date = Date.parse(self.response['last-modified'])
+      @date = Date.parse(@workbook[0][2][1].value.split('As of ').last)
       @workbook = RubyXL::Parser.parse_buffer(body)
     rescue ::Zip::Error => e
       raise e, "XLSX file format error: #{e}", e.backtrace
-    end
-
-    private
-
-    def rows(body)
-      (body.lines.drop(9) - body.lines.drop(9).slice(-12, 12)).join
     end
   end
 end

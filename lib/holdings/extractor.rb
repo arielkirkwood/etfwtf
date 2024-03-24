@@ -16,6 +16,8 @@ module Holdings
       Holding.transaction do
         self.holdings = holdings_via_strategy
 
+        Rails.logger.info("#{fund.name} holdings: #{holdings.count}")
+
         fund.save! if holdings.any?
       end
     end
@@ -33,21 +35,26 @@ module Holdings
                           when ExcelOpenXMLFile
                             Holdings::Extraction::ExcelOpenStrategy
                           else
-                            raise UnknownStrategyError, holdings_file.class
+                            raise UnknownStrategyError, "#{holdings_file.class} found at #{agent.page.url}"
                           end
     end
 
     def holdings_file
-      @holdings_file ||= agent.get(fund.holdings_url)
+      @holdings_file ||= holdings_file_via_agent
+    end
+
+    def holdings_file_via_agent
+      agent.get(fund.public_url)
+      agent.click(agent.page.link_with(text: fund.manager.holdings_link_text))
     end
 
     def agent
-      @agent ||= ::Mechanize.new
-      @agent.pluggable_parser.csv = CSVFile
-      @agent.pluggable_parser.xml = ExcelOpenXMLFile
-      @agent.pluggable_parser['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] = ExcelOpenXMLFile
-
-      @agent
+      @agent ||= ::Mechanize.new do |agent|
+        agent.user_agent_alias = 'iPhone'
+        agent.pluggable_parser.csv = CSVFile
+        agent.pluggable_parser.xml = ExcelOpenXMLFile
+        agent.pluggable_parser['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] = ExcelOpenXMLFile
+      end
     end
   end
 end

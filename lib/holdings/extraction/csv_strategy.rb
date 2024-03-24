@@ -19,19 +19,16 @@ module Holdings
             end
           end
 
-          notional_value_cents = row[:notional_value].to_d * 100
-          unit_price_cents = row[:price].present? ? row[:price].to_d * 100 : 0
-          market_price_cents = (row[:market_price] || row[:market_value]).to_d * 100
+          date = file.date
+          price = Holdings::Price.find_or_initialize_by(asset:, date:)
+          price.update(notional_value_cents: row[:notional_value].to_d * 100,
+                       notional_value_currency: row[:currency],
+                       unit_price_cents: row[:price].present? ? row[:price].to_d * 100 : 0,
+                       unit_price_currency: row[:currency],
+                       market_price_cents: (row[:market_price] || row[:market_value]).to_d * 100,
+                       market_price_currency: row[:market_currency])
 
-          fund.holdings.build(asset:,
-                              date: file.date,
-                              quantity: row[:shares].presence || 1,
-                              notional_value_cents:,
-                              notional_value_currency: row[:currency],
-                              unit_price_cents:,
-                              unit_price_currency: row[:currency],
-                              market_price_cents:,
-                              market_price_currency: row[:market_currency])
+          fund.holdings.build(date:, quantity: row[:shares], price:, accrual_date: row[:accrual_date])
         end
       end
     end
