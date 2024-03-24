@@ -18,18 +18,13 @@ module Holdings
             Assets::Ticker.create(asset:, identifier: row[:ticker])
           end
 
-          price = asset.prices.find_by!(date:) if asset.prices.any?
+          price = if asset.prices.any?
+                    asset.prices.find_by(date:)
+                  else
+                    asset.prices.create(date:)
+                  end
 
-          # notional_value_cents = row[:notional_value].to_d * 100
-          # unit_price_cents = row[:price].present? ? row[:price].to_d * 100 : 0
-          # market_price_cents = (row[:market_price] || row[:market_value]).to_d * 100
-
-          holding = fund.holdings.build(asset:,
-                                        date:,
-                                        quantity: row[:shares_held])
-
-          holding.price = price if price
-          holding
+          fund.holdings.build(date:, quantity: row[:shares_held], price:)
         end
       end
     end

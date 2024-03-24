@@ -13,6 +13,8 @@ module Holdings
 
       def date
         @date ||= Date.parse(workbook[0][2][1].value.split('As of ').last)
+      rescue DateError
+        @date = Date.parse(workbook[0][1][1].value)
       end
     end
   end

@@ -10,7 +10,7 @@ class Fund < ApplicationRecord
   delegate :extract_holdings, to: :holdings_extractor
   delegate :name, to: :underlying_asset
 
-  validates :underlying_asset, uniqueness: true
+  validates :underlying_asset, uniqueness: true # rubocop:disable Rails/UniqueValidationWithoutIndex
   validates_associated :holdings
 
   private

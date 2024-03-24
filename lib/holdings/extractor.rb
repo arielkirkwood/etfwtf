@@ -18,7 +18,6 @@ module Holdings
 
         Rails.logger.info("#{fund.name} holdings: #{holdings.count}")
 
-        debugger unless fund.valid?
         fund.save if holdings.any?
       end
     end
@@ -29,7 +28,7 @@ module Holdings
       @strategy ||= case holdings_file
                     when Holdings::Files::CSV
                       Holdings::ExtractionStrategies::CSV.new(fund)
-                    when Holdings::Files::OpenXml
+                    when Holdings::Files::OpenXML
                       Holdings::ExtractionStrategies::Excel.new(fund)
                     else
                       raise UnknownStrategyError, "#{holdings_file.class} found at #{agent.page.url}"
@@ -42,7 +41,7 @@ module Holdings
 
     def refresh_holdings_file_via_agent
       agent.get(fund.public_url)
-      @holdings_file = agent.page.link_with(text: fund.manager.holdings_link_text).click
+      agent.click(agent.page.link_with!(text: fund.manager.holdings_link_text))
     end
 
     def agent

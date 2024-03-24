@@ -74,10 +74,11 @@ eemx_fund = Fund.find_or_initialize_by(underlying_asset: eemx_asset)
 eemx_fund.update(public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-msci-emerging-markets-fossil-fuel-reserves-free-etf-eemx', manager: state_street)
 
 begin
-  [crbn_fund, bgrn_fund].each(&:extract_holdings)
-  [ivv_fund, stip_fund, emb_fund].each(&:save)
+  [crbn_fund, bgrn_fund, ivv_fund, stip_fund, emb_fund].each do |fund|
+    next if fund.holdings.where(date: Time.zone.today - 2).present?
+
+    fund.extract_holdings
+  end
   vote_fund.save
-  [spyx_fund, efax_fund, eemx_fund].each(&:save)
-rescue StandardError => e
-  debugger
+  [efax_fund, eemx_fund].each(&:save)
 end
