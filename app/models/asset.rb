@@ -4,6 +4,7 @@ class Asset < ApplicationRecord
   class UnknownTypeError < StandardError; end
 
   has_one :identity, class_name: 'Assets::Identity', dependent: :destroy
+  has_one :exchange, through: :identity
 
   has_many :prices, class_name: 'Holdings::Price', dependent: :destroy
 

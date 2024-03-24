@@ -23,15 +23,13 @@ class CreateHoldings < ActiveRecord::Migration[7.1]
       t.references :asset, null: false, foreign_key: true
       t.string :type, null: false
       t.string :identifier, null: false
-
-      t.index :identifier, unique: true
     end
 
     create_table :funds do |t|
       t.timestamps
 
       t.belongs_to :manager, null: false, foreign_key: { to_table: :assets_managers }
-      t.belongs_to :underlying_asset, null: false, foreign_key: { to_table: :assets }
+      t.belongs_to :underlying_asset, null: false, foreign_key: { to_table: :assets, unique: true }
       t.string :public_url, null: false
     end
 

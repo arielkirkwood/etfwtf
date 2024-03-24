@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Holdings
-  module Extraction
-    class ExcelOpenStrategy < Strategy
+  module ExtractionStrategies
+    class Excel < Base
       def extract(file) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         worksheet = file.workbook.worksheets.first
         date = file.date

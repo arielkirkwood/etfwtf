@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_24_143627) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_24_175339) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,14 +22,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_24_143627) do
     t.string "sector"
   end
 
+  create_table "assets_exchanges", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.index ["name"], name: "index_assets_exchanges_on_name", unique: true
+  end
+
   create_table "assets_identities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "asset_id", null: false
     t.string "type", null: false
     t.string "identifier", null: false
+    t.bigint "exchange_id"
     t.index ["asset_id"], name: "index_assets_identities_on_asset_id"
-    t.index ["identifier"], name: "index_assets_identities_on_identifier", unique: true
+    t.index ["exchange_id"], name: "index_assets_identities_on_exchange_id"
+    t.index ["identifier", "exchange_id"], name: "index_assets_identities_on_identifier_and_exchange_id", unique: true
   end
 
   create_table "assets_managers", force: :cascade do |t|
@@ -77,6 +86,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_24_143627) do
   end
 
   add_foreign_key "assets_identities", "assets"
+  add_foreign_key "assets_identities", "assets_exchanges", column: "exchange_id"
   add_foreign_key "funds", "assets", column: "underlying_asset_id"
   add_foreign_key "funds", "assets_managers", column: "manager_id"
   add_foreign_key "holdings", "funds"

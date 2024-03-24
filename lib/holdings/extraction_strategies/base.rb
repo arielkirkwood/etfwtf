@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Holdings
-  module Extraction
-    class Strategy
+  module ExtractionStrategies
+    class Base
       attr_accessor :fund
 
       def initialize(fund)
