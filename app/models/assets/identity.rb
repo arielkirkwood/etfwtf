@@ -4,6 +4,6 @@ module Assets
   class Identity < ApplicationRecord
     belongs_to :asset
 
-    validates :identifier, length: { minimum: 1 }
+    validates :identifier, length: { minimum: 1 }, uniqueness: true
   end
 end

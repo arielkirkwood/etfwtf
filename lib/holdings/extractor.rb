@@ -18,6 +18,7 @@ module Holdings
 
         Rails.logger.info("#{fund.name} holdings: #{holdings.count}")
 
+        debugger if holdings.any?(&:invalid?)
         fund.save! if holdings.any?
       end
     end

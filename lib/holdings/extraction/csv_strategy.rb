@@ -28,7 +28,7 @@ module Holdings
                        market_price_cents: (row[:market_price] || row[:market_value]).to_d * 100,
                        market_price_currency: row[:market_currency])
 
-          fund.holdings.build(date:, quantity: row[:shares], price:, accrual_date: row[:accrual_date])
+          fund.holdings.build(date:, quantity: row[:shares].to_d, price:, accrual_date: row[:accrual_date])
         end
       end
     end
