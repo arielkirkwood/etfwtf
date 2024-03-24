@@ -4,7 +4,7 @@ require 'rubyXL'
 
 module Holdings
   module Files
-    class OpenXML < Base
+    class OpenXML < Mechanize::File
       def workbook
         @workbook ||= RubyXL::Parser.parse_buffer(body)
       rescue ::Zip::Error => e

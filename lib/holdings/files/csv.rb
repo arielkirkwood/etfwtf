@@ -4,7 +4,7 @@ require 'csv'
 
 module Holdings
   module Files
-    class CSV < Base
+    class CSV < Mechanize::File
       def csv
         @csv ||= ::CSV.new rows, headers: true, converters: :numeric, header_converters: :symbol
       end
