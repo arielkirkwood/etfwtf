@@ -5,20 +5,18 @@ module Holdings
     class CSV < Base
       def extract(file) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
         file.csv.map do |row|
+          exchange = Assets::Exchange.find_or_create_by(name: row[:exchange])
+          identity = if row[:ticker].present?
+                       if asset_type(row[:asset_class]) == 'CashEquivalent' && row[:market_currency].present?
+                         Assets::Currency.find_or_initialize_by(currency: row[:market_currency])
+                       else
+                         Assets::Ticker.find_or_initialize_by(ticker: row[:ticker], exchange:)
+                       end
+                     elsif row[:isin].present?
+                       Assets::ISIN.find_or_initialize_by(isin: row[:isin], exchange:)
+                     end
           asset = Asset.find_or_create_by!(asset_class: asset_type(row[:asset_class]), name: row[:name], sector: row[:sector])
-          exchange = Assets::Exchange.find_or_create_by(name: row[:exchange]) if asset.exchange.blank?
-
-          if asset.identity.blank?
-            if row[:ticker].present?
-              if asset.is_a?(CashEquivalent) && row[:market_currency].present?
-                Assets::CurrencyIdentity.find_or_create_by(asset:, currency: row[:market_currency])
-              else
-                Assets::Ticker.find_or_create_by!(asset:, ticker: row[:ticker], exchange:)
-              end
-            elsif row[:isin].present?
-              Assets::ISINIdentity.find_or_create_by(asset:, isin: row[:isin], exchange:)
-            end
-          end
+          identity.update(asset:)
 
           date = file.date
           price = Holdings::Price.find_or_initialize_by(asset:, date:)
@@ -28,8 +26,9 @@ module Holdings
                        unit_price_currency: row[:currency],
                        market_price_cents: (row[:market_price] || row[:market_value]).to_d * 100,
                        market_price_currency: row[:market_currency])
+          quantity = row[:shares].to_d
 
-          fund.holdings.build(date:, quantity: row[:shares].to_d, price:, accrual_date: row[:accrual_date])
+          fund.holdings.build(date:, quantity: quantity.zero? ? 1 : quantity, price:, accrual_date: row[:accrual_date])
         end
       end
     end

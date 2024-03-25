@@ -15,8 +15,10 @@
 # These inflection rules are supported but not enabled by default:
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'CSV'
+  inflect.acronym 'CUSIP'
   inflect.acronym 'ISIN'
   inflect.acronym 'RESTful'
+  inflect.acronym 'SEDOL'
   inflect.acronym 'XLSX'
   inflect.acronym 'XML'
 end

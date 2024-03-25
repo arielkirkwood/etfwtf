@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Assets
-  class ISINIdentity < Identity
+  class ISIN < Identity
     belongs_to :exchange, class_name: 'Assets::Exchange'
 
     alias_attribute :isin, :identifier

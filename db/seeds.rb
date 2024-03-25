@@ -55,22 +55,30 @@ spyx_asset = Asset.find_or_create_by!(name: 'SPDR® S&P® 500 Fossil Fuel Reserv
                                       type: 'ExchangeTradedFund',
                                       sector: 'Large Blend')
 Assets::Ticker.find_or_create_by!(asset: spyx_asset, ticker: 'SPYX', exchange: nyse_arca)
-Assets::ISINIdentity.find_or_create_by!(asset: spyx_asset, isin: 'US78468R7961', exchange: nyse_arca)
+Assets::ISIN.find_or_create_by!(asset: spyx_asset, isin: 'US78468R7961', exchange: nyse_arca)
 spyx_fund = Fund.find_or_initialize_by(underlying_asset: spyx_asset)
 spyx_fund.update(public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-sp-500-fossil-fuel-reserves-free-etf-spyx', manager: state_street)
 efax_asset = Asset.find_or_create_by!(name: 'SPDR® MSCI EAFE Fossil Fuel Reserves Free ETF',
                                       type: 'ExchangeTradedFund',
                                       sector: 'Foreign Large Blend')
 Assets::Ticker.find_or_create_by!(asset: efax_asset, ticker: 'EFAX', exchange: nyse_arca)
-Assets::ISINIdentity.find_or_create_by!(asset: efax_asset, isin: 'US78470E1064', exchange: nyse_arca)
+Assets::ISIN.find_or_create_by!(asset: efax_asset, isin: 'US78470E1064', exchange: nyse_arca)
 efax_fund = Fund.find_or_initialize_by(underlying_asset: efax_asset)
 efax_fund.update(public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-msci-eafe-fossil-fuel-reserves-free-etf-efax', manager: state_street)
 eemx_asset = Asset.find_or_create_by!(name: 'SPDR® MSCI Emerging Markets Fossil Fuel Reserves Free ETF',
                                       type: 'ExchangeTradedFund',
                                       sector: 'Diversified Emerging Markets')
 Assets::Ticker.find_or_create_by!(asset: eemx_asset, ticker: 'EEMX', exchange: nyse_arca)
-Assets::ISINIdentity.find_or_create_by!(asset: eemx_asset, isin: 'US78470E2054', exchange: nyse_arca)
+Assets::ISIN.find_or_create_by!(asset: eemx_asset, isin: 'US78470E2054', exchange: nyse_arca)
 eemx_fund = Fund.find_or_initialize_by(underlying_asset: eemx_asset)
 eemx_fund.update(public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-msci-emerging-markets-fossil-fuel-reserves-free-etf-eemx', manager: state_street)
 
 [crbn_fund, bgrn_fund, ivv_fund, stip_fund, emb_fund, vote_fund, efax_fund, eemx_fund].each(&:save)
+
+# Asset seeds to help with first-time ingestion
+berkshire_hathaway = Equity.create(name: 'BERKSHIRE HATHAWAY INC CL B', sector: 'Financials')
+Assets::Ticker.create(ticker: 'BRK.B', asset: berkshire_hathaway, exchange: nasdaq)
+Assets::Ticker.create(ticker: 'BRKB', asset: berkshire_hathaway, exchange: nasdaq)
+Assets::Ticker.create(ticker: 'BRK/B', asset: berkshire_hathaway, exchange: nasdaq)
+Assets::CUSIP.create(cusip: '084670702', asset: berkshire_hathaway, exchange: nasdaq)
+Assets::SEDOL.create(sedol: '2073390', asset: berkshire_hathaway, exchange: nasdaq)

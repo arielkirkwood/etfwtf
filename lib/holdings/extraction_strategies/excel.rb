@@ -10,8 +10,11 @@ module Holdings
         headings = [:name, :ticker, :identifier, :sedol, :weight, :sector, :shares_held, :local_currency]
         data = worksheet.drop(5).map { |row| headings.zip(row.cells.map(&:value)).to_h }
 
-        data.map do |row|
-          asset = Asset.find_by(identity: Assets::Identity.find_by(identifier: row[:ticker]))
+        data.map.with_index do |row, index|
+          ticker = Assets::Ticker.find_or_create_by(ticker: row[:ticker])
+          cusip = Assets::CUSIP.find_or_create_by(cusip: row[:identifier])
+          sedol = Assets::SEDOL.find_or_create_by(sedol: row[:sedol])
+          asset = Asset.find_by(ticker: ticker)
 
           if asset.blank?
             asset = Asset.find_or_create_by!(name: row[:name], sector: row[:sector])

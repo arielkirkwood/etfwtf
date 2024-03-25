@@ -39,8 +39,8 @@ jobs:
       # Add or replace test runners here
       # - name: Run tests
       #   run: bin/rake
-      - name: Run test (db:seed)
-        run: bin/rails db:seed
+      - name: Run test (holdings:extract)
+        run: bin/rails holdings:extract
 
   lint:
     runs-on: ubuntu-latest

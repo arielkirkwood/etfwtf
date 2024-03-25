@@ -3,8 +3,10 @@
 desc "Update existing funds' holdings."
 
 namespace :holdings do
-  task extract: :environment do
-    manager = Assets::Manager.first
-    manager.funds.each(&:extract_holdings)
+  task extract: [:environment, 'db:seed'] do
+    # managers = Assets::Manager.where.not(name: 'TCW')
+    # managers.flat_map(&:funds).each(&:extract_holdings)
+    fund = Fund.first
+    fund.extract_holdings
   end
 end

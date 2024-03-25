@@ -16,9 +16,10 @@ module Holdings
       Holding.transaction do
         self.holdings = strategy.extract(holdings_file)
 
-        Rails.logger.info("#{fund.name} holdings: #{holdings.count}")
-
         fund.save! if holdings.any?
+        Rails.logger.info("#{fund.name} saved, holdings: #{holdings.count}")
+      rescue ActiveRecord::RecordInvalid => e
+        debugger
       end
     end
 
