@@ -4,7 +4,7 @@ module Holdings
   module ExtractionStrategies
     class CSV < Base
       def extract(file) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
-        file.csv.map do |row|
+        file.csv.map do |row| # rubocop:disable Metrics/BlockLength
           exchange = Assets::Exchange.find_or_create_by(name: row[:exchange])
           identity = if row[:ticker].present?
                        if asset_type(row[:asset_class]) == 'CashEquivalent' && row[:market_currency].present?
@@ -28,7 +28,7 @@ module Holdings
                                market_price_cents: (row[:market_price] || row[:market_value]).to_d * 100,
                                market_price_currency: row[:market_currency])
           when Holdings::BondPrice
-            asset_price.update()
+            asset_price.update
           end
 
           date = file.date

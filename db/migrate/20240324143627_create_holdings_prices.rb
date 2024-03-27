@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateHoldingsPrices < ActiveRecord::Migration[7.1]
-  def change # rubocop:disable Metrics/MethodLength
+  def change
     create_table :holdings_prices do |t|
       t.timestamps
 
