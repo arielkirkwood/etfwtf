@@ -4,9 +4,11 @@ class Holding < ApplicationRecord
   belongs_to :fund
   belongs_to :price, class_name: 'Holdings::Price'
 
-  delegate :asset, :market_price, :notional_value, :unit_price, to: :price
-  delegate :exchange, to: :asset
+  has_one :asset_price, through: :price, source: :priceable, source_type: 'Holdings::EquityPrice', class_name: 'Holdings::EquityPrice'
 
-  validates :quantity, numericality: { greater_than_or_equal_to: 0 }
+  delegate :asset, to: :price
+  delegate :asset_class, :exchange, to: :asset
+
+  validates :quantity, numericality: true
   validates :price, uniqueness: { scope: [:fund, :quantity, :date] }
 end

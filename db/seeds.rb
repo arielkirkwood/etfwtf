@@ -76,9 +76,9 @@ eemx_fund.update(public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/s
 [crbn_fund, bgrn_fund, ivv_fund, stip_fund, emb_fund, vote_fund, efax_fund, eemx_fund].each(&:save)
 
 # Asset seeds to help with first-time ingestion
-berkshire_hathaway = Equity.create(name: 'BERKSHIRE HATHAWAY INC CL B', sector: 'Financials')
-Assets::Ticker.create(ticker: 'BRK.B', asset: berkshire_hathaway, exchange: nasdaq)
-Assets::Ticker.create(ticker: 'BRKB', asset: berkshire_hathaway, exchange: nasdaq)
-Assets::Ticker.create(ticker: 'BRK/B', asset: berkshire_hathaway, exchange: nasdaq)
-Assets::CUSIP.create(cusip: '084670702', asset: berkshire_hathaway, exchange: nasdaq)
-Assets::SEDOL.create(sedol: '2073390', asset: berkshire_hathaway, exchange: nasdaq)
+berkshire_hathaway = Equity.find_or_create_by!(name: 'BERKSHIRE HATHAWAY INC CL B', sector: 'Financials')
+Assets::Ticker.find_or_create_by!(ticker: 'BRK.B', asset: berkshire_hathaway, exchange: nasdaq)
+Assets::Ticker.find_or_create_by!(ticker: 'BRKB', asset: berkshire_hathaway, exchange: nasdaq)
+Assets::Ticker.find_or_create_by!(ticker: 'BRK/B', asset: berkshire_hathaway, exchange: nasdaq)
+Assets::CUSIP.find_or_create_by!(cusip: '084670702', asset: berkshire_hathaway, exchange: nasdaq)
+Assets::SEDOL.find_or_create_by!(sedol: '2073390', asset: berkshire_hathaway, exchange: nasdaq)

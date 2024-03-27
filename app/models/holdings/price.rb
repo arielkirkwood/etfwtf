@@ -3,7 +3,9 @@
 module Holdings
   class Price < ApplicationRecord
     belongs_to :asset
+    belongs_to :priceable, polymorphic: true
 
-    monetize :market_price_cents, :notional_value_cents, :unit_price_cents
+    delegate :market_price, :notional_value, :unit_price, to: :priceable # Equity price attributes
+    delegate :par_value, to: :priceable # Bond price attributes
   end
 end

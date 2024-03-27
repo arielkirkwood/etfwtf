@@ -6,7 +6,7 @@ module Holdings
   class UnknownStrategyError < StandardError; end
 
   class Extractor
-    attr_accessor :fund, :holdings
+    attr_reader :fund, :holdings
 
     def initialize(fund)
       @fund = fund
@@ -14,7 +14,7 @@ module Holdings
 
     def extract_holdings
       Holding.transaction do
-        self.holdings = strategy.extract(holdings_file)
+        @holdings = strategy.extract(holdings_file)
 
         fund.save! if holdings.any?
         Rails.logger.info("#{fund.name} saved, holdings: #{holdings.count}")
@@ -37,10 +37,10 @@ module Holdings
     end
 
     def holdings_file
-      @holdings_file ||= refresh_holdings_file_via_agent
+      @holdings_file ||= holdings_file_via_agent
     end
 
-    def refresh_holdings_file_via_agent
+    def holdings_file_via_agent
       agent.get(fund.public_url)
       agent.click(agent.page.link_with!(text: fund.manager.holdings_link_text))
     end

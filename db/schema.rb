@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_24_175339) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_25_124228) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -71,18 +71,35 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_24_175339) do
     t.index ["price_id"], name: "index_holdings_on_price_id"
   end
 
-  create_table "holdings_prices", force: :cascade do |t|
+  create_table "holdings_bond_prices", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "asset_id", null: false
-    t.date "date", null: false
+    t.integer "par_value_cents", default: 0, null: false
+    t.string "par_value_currency", default: "USD", null: false
+    t.decimal "coupon_rate", null: false
+    t.date "maturity_date", null: false
+  end
+
+  create_table "holdings_equity_prices", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "notional_value_cents", default: 0, null: false
     t.string "notional_value_currency", default: "USD", null: false
     t.integer "unit_price_cents", default: 0, null: false
     t.string "unit_price_currency", default: "USD", null: false
     t.integer "market_price_cents", default: 0, null: false
     t.string "market_price_currency", default: "USD", null: false
+  end
+
+  create_table "holdings_prices", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "asset_id", null: false
+    t.date "date", null: false
+    t.string "priceable_type"
+    t.bigint "priceable_id"
     t.index ["asset_id"], name: "index_holdings_prices_on_asset_id"
+    t.index ["priceable_type", "priceable_id"], name: "index_holdings_prices_on_priceable"
   end
 
   add_foreign_key "assets_identities", "assets"

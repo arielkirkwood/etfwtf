@@ -7,9 +7,6 @@ class CreateHoldingsPrices < ActiveRecord::Migration[7.1]
 
       t.belongs_to :asset, null: false, foreign_key: true
       t.date :date, null: false
-      t.monetize :notional_value, null: false
-      t.monetize :unit_price, null: false
-      t.monetize :market_price, null: false
     end
 
     change_table :holdings do |t|
