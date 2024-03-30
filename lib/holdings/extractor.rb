@@ -31,9 +31,9 @@ module Holdings
     def strategy
       @strategy ||= case fund.holdings_file.content_type
                     when 'text/csv'
-                      Holdings::ExtractionStrategies::CSV.new(fund.holdings_file)
+                      Holdings::ExtractionStrategies::CSV.new(fund)
                     when 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                      Holdings::ExtractionStrategies::Excel.new(fund.holdings_file)
+                      Holdings::ExtractionStrategies::Excel.new(fund)
                     else
                       raise UnknownStrategyError, fund.holdings_file
                     end
