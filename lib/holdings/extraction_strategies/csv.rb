@@ -20,24 +20,26 @@ module Holdings
           asset = Asset.find_or_create_by!(asset_class: asset_type(row[:asset_class]), name: row[:name], sector: row[:sector])
           identity.update(asset:)
 
-          asset_price = asset.asset_prices.build
+          asset_price = asset.asset_prices.first_or_initialize
           case asset_price
           when Holdings::EquityPrice
-            asset_price.update(notional_value_cents: (row[:notional_value].to_d * 100).to_i,
-                               notional_value_currency: row[:currency],
-                               unit_price_cents: row[:price].present? ? (row[:price].to_d * 100).to_i : 0,
-                               unit_price_currency: row[:currency],
-                               market_price_cents: (row[:market_price] || row[:market_value]).to_d * 100,
-                               market_price_currency: row[:market_currency])
+            asset_price.update(price_cents: (row[:price].to_d * 100).to_i,
+                               price_currency: row[:currency])
           when Holdings::BondPrice
-            asset_price.update
+            asset_price.update(par_value_cents: (row[:par_value].to_d * 100).to_i,
+                               par_value_currency: row[:currency],
+                               coupon_rate: row[:coupon_rate].to_d,
+                               maturity_date: row[:maturity_date])
           end
 
-          price = asset.prices.build(date:)
-          price.priceable = asset_price
+          price = asset.prices.first_or_initialize(date:, priceable: asset_price,
+                                                   notional_value_cents: (row[:price].to_d * 100).to_i,
+                                                   notional_value_currency: row[:currency],
+                                                   market_value_cents: (row[:market_value].to_d * 100).to_i,
+                                                   market_value_currency: row[:market_currency])
           quantity = row[:shares].to_d
 
-          fund.holdings.build(date:, quantity:, price:, accrual_date: row[:accrual_date])
+          fund.holdings.first_or_initialize(date:, quantity:, price:, accrual_date: row[:accrual_date])
         end
       end
 

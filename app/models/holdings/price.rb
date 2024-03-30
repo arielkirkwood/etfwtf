@@ -5,7 +5,6 @@ module Holdings
     belongs_to :asset
     belongs_to :priceable, polymorphic: true
 
-    delegate :market_price, :notional_value, :unit_price, to: :priceable # Equity price attributes
-    delegate :par_value, to: :priceable # Bond price attributes
+    monetize :notional_value_cents, :market_value_cents
   end
 end

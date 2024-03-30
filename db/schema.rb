@@ -111,12 +111,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
   create_table "holdings_equity_prices", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "notional_value_cents", default: 0, null: false
-    t.string "notional_value_currency", default: "USD", null: false
-    t.integer "unit_price_cents", default: 0, null: false
-    t.string "unit_price_currency", default: "USD", null: false
-    t.integer "market_price_cents", default: 0, null: false
-    t.string "market_price_currency", default: "USD", null: false
+    t.integer "price_cents", default: 0, null: false
+    t.string "price_currency", default: "USD", null: false
   end
 
   create_table "holdings_prices", force: :cascade do |t|
@@ -126,6 +122,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.date "date", null: false
     t.string "priceable_type"
     t.bigint "priceable_id"
+    t.integer "notional_value_cents", default: 0, null: false
+    t.string "notional_value_currency", default: "USD", null: false
+    t.integer "market_value_cents", default: 0, null: false
+    t.string "market_value_currency", default: "USD", null: false
     t.index ["asset_id"], name: "index_holdings_prices_on_asset_id"
     t.index ["priceable_type", "priceable_id"], name: "index_holdings_prices_on_priceable"
   end
