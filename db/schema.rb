@@ -105,7 +105,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.integer "par_value_cents", default: 0, null: false
     t.string "par_value_currency", default: "USD", null: false
     t.decimal "coupon_rate", null: false
-    t.date "maturity_date", null: false
+    t.date "maturity_date"
   end
 
   create_table "holdings_equity_prices", force: :cascade do |t|

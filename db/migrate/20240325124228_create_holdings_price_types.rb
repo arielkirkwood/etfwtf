@@ -13,7 +13,7 @@ class CreateHoldingsPriceTypes < ActiveRecord::Migration[7.1]
 
       t.monetize :par_value, null: false
       t.decimal :coupon_rate, null: false
-      t.date :maturity_date, null: false
+      t.date :maturity_date
     end
 
     create_table :holdings_equity_prices do |t|
