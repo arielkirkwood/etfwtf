@@ -4,6 +4,8 @@ class Fund < ApplicationRecord
   belongs_to :manager, class_name: 'Assets::Manager'
   belongs_to :underlying_asset, class_name: 'Asset'
 
+  has_one_attached :holdings_file
+
   has_many :holdings, dependent: :destroy
   has_many :assets, through: :holdings
 

@@ -7,6 +7,7 @@ module Holdings
 
       def initialize(fund)
         @fund = fund
+        @file = fund.holdings_file
       end
 
       private

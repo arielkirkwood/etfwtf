@@ -10,11 +10,16 @@ module Holdings
 
     def initialize(fund)
       @fund = fund
+      return if fund.holdings_file.attached?
+      raise unless file_via_agent.code == '200'
+
+      fund.holdings_file.attach(io: file_via_agent.body_io, filename: file_via_agent.filename, content_type: file_via_agent.response['content_type'])
+      fund.save
     end
 
     def extract_holdings
       Holding.transaction do
-        @holdings = strategy.extract(holdings_file)
+        @holdings = strategy.extract
 
         fund.save! if holdings.any?
         Rails.logger.info("#{fund.name} saved, holdings: #{holdings.count}")
@@ -24,21 +29,17 @@ module Holdings
     private
 
     def strategy
-      @strategy ||= case holdings_file
-                    when Holdings::Files::CSV
+      @strategy ||= case fund.holdings_file.content_type
+                    when 'text/csv'
                       Holdings::ExtractionStrategies::CSV.new(fund)
-                    when Holdings::Files::OpenXML
+                    when 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                       Holdings::ExtractionStrategies::Excel.new(fund)
                     else
-                      raise UnknownStrategyError, "#{holdings_file.class} found at #{agent.page.url}"
+                      raise UnknownStrategyError, fund.holdings_file
                     end
     end
 
-    def holdings_file
-      @holdings_file ||= holdings_file_via_agent
-    end
-
-    def holdings_file_via_agent
+    def file_via_agent
       agent.get(fund.public_url)
       agent.click(agent.page.link_with!(text: fund.manager.holdings_link_text))
     end
@@ -46,9 +47,7 @@ module Holdings
     def agent
       @agent ||= ::Mechanize.new do |agent|
         agent.user_agent_alias = 'iPhone'
-        agent.pluggable_parser.csv = Holdings::Files::CSV
-        agent.pluggable_parser.xml = Holdings::Files::OpenXML
-        agent.pluggable_parser['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] = Holdings::Files::OpenXML
+        agent.pluggable_parser.default = Mechanize::Download
       end
     end
   end
