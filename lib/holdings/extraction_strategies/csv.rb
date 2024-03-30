@@ -7,6 +7,11 @@ module Holdings
     class CSV < Base
       def extract # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
         csv.map do |row| # rubocop:disable Metrics/BlockLength
+          begin
+            accrual_date = Date.parse(row[:accrual_date])
+          rescue Date::Error
+            accrual_date = nil
+          end
           exchange = Assets::Exchange.find_or_create_by(name: row[:exchange])
           identity = if row[:ticker].present?
                        if asset_type(row[:asset_class]) == 'CashEquivalent' && row[:market_currency].present?
@@ -26,10 +31,15 @@ module Holdings
             asset_price.update(price_cents: (row[:price].to_d * 100).to_i,
                                price_currency: row[:currency])
           when Holdings::BondPrice
+            begin
+              maturity_date = Date.parse(row[:maturity])
+            rescue Date::Error
+              maturity_date = nil
+            end
             asset_price.update(par_value_cents: (row[:par_value].to_d * 100).to_i,
                                par_value_currency: row[:currency],
                                coupon_rate: row[:coupon_rate].to_d,
-                               maturity_date: row[:maturity_date])
+                               maturity_date:)
           end
 
           price = asset.prices.first_or_initialize(date:, priceable: asset_price,
@@ -39,7 +49,7 @@ module Holdings
                                                    market_value_currency: row[:market_currency])
           quantity = row[:shares].to_d
 
-          fund.holdings.first_or_initialize(date:, quantity:, price:, accrual_date: row[:accrual_date])
+          fund.holdings.first_or_initialize(date:, quantity:, price:, accrual_date:)
         end
       end
 

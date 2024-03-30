@@ -3,11 +3,8 @@
 module Holdings
   module ExtractionStrategies
     class Base
-      attr_reader :fund
-
-      def initialize(fund)
-        @fund = fund
-        @file = fund.holdings_file
+      def initialize(file)
+        @file = file
       end
 
       private

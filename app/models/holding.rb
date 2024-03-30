@@ -9,6 +9,7 @@ class Holding < ApplicationRecord
   delegate :asset, to: :price
   delegate :asset_class, :exchange, to: :asset
 
+  validates :accrual_date, timeliness: { type: :date }, allow_nil: true
   validates :quantity, numericality: true
   validates :price, uniqueness: { scope: [:fund, :quantity, :date] }
 end

@@ -8,6 +8,7 @@ ruby '3.3.0'
 gem 'mechanize', '~> 2.10' # mechanize fetches remote HTTP resources and handle file types selectively
 gem 'money-rails', '~> 1.15' # money-rails allows handling a pair of money/currency columns as one money object
 gem 'rubyXL', '~> 3.4' # rubyXL parses .xlsx XML files
+gem 'validates_timeliness', '~> 7.0.0.beta2' # validates_timeliness provides complete validation of dates, times and datetimes
 
 # Application/infrastructure level dependencies
 
