@@ -6,7 +6,7 @@ module Holdings
   class UnknownStrategyError < StandardError; end
 
   class Extractor
-    attr_reader :fund, :holdings
+    attr_reader :fund
 
     def initialize(fund)
       @fund = fund
@@ -19,10 +19,10 @@ module Holdings
 
     def extract_holdings
       Holding.transaction do
-        @holdings = strategy.extract
+        strategy.extract
 
-        fund.save! if holdings.any?
-        Rails.logger.info("#{fund.name} saved, holdings: #{holdings.count}")
+        fund.save! if fund.holdings.any?
+        Rails.logger.info("#{fund.name} saved, holdings: #{fund.holdings.count}")
       end
     end
 

@@ -47,9 +47,10 @@ module Holdings
                                                    notional_value_currency: row[:currency],
                                                    market_value_cents: (row[:market_value].to_d * 100).to_i,
                                                    market_value_currency: row[:market_currency])
+          price.save!
           quantity = row[:shares].to_d
 
-          fund.holdings.first_or_initialize(date:, quantity:, price:, accrual_date:)
+          fund.holdings.build(date:, quantity:, price:, accrual_date:)
         end
       end
 
