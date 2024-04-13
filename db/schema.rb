@@ -50,13 +50,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.string "sector"
   end
 
-  create_table "assets_exchanges", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "name"
-    t.index ["name"], name: "index_assets_exchanges_on_name", unique: true
-  end
-
   create_table "assets_identities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -83,19 +76,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.bigint "underlying_asset_id", null: false
     t.string "public_url", null: false
     t.index ["manager_id"], name: "index_funds_on_manager_id"
-    t.index ["underlying_asset_id"], name: "index_funds_on_underlying_asset_id"
+    t.index ["underlying_asset_id"], name: "index_funds_on_underlying_asset_id", unique: true
   end
 
   create_table "holdings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "fund_id", null: false
-    t.date "date", null: false
+    t.bigint "portfolio_id", null: false
     t.decimal "quantity", null: false
     t.date "accrual_date"
     t.bigint "price_id"
-    t.index ["fund_id"], name: "index_holdings_on_fund_id"
-    t.index ["price_id", "fund_id", "quantity", "date"], name: "index_holdings_on_price_id_and_fund_id_and_quantity_and_date", unique: true
+    t.index ["portfolio_id"], name: "index_holdings_on_portfolio_id"
+    t.index ["price_id", "portfolio_id", "quantity"], name: "index_holdings_on_price_id_and_portfolio_id_and_quantity", unique: true
     t.index ["price_id"], name: "index_holdings_on_price_id"
   end
 
@@ -130,13 +122,28 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.index ["priceable_type", "priceable_id"], name: "index_holdings_prices_on_priceable"
   end
 
+  create_table "markets_exchanges", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+  end
+
+  create_table "portfolios", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "fund_id", null: false
+    t.date "date", null: false
+    t.index ["fund_id"], name: "index_portfolios_on_fund_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "assets_identities", "assets"
-  add_foreign_key "assets_identities", "assets_exchanges", column: "exchange_id"
+  add_foreign_key "assets_identities", "markets_exchanges", column: "exchange_id"
   add_foreign_key "funds", "assets", column: "underlying_asset_id"
   add_foreign_key "funds", "assets_managers", column: "manager_id"
-  add_foreign_key "holdings", "funds"
   add_foreign_key "holdings", "holdings_prices", column: "price_id"
+  add_foreign_key "holdings", "portfolios"
   add_foreign_key "holdings_prices", "assets"
+  add_foreign_key "portfolios", "funds"
 end

@@ -5,14 +5,20 @@ require 'csv'
 module Holdings
   module ExtractionStrategies
     class CSV < Base
-      def extract # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+      def extract_portfolio_date
+        portfolio.update(date:)
+      end
+
+      def extract_holdings # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+        return unless portfolio.holdings.empty?
+
         csv.map do |row| # rubocop:disable Metrics/BlockLength
           begin
             accrual_date = Date.parse(row[:accrual_date])
           rescue Date::Error
             accrual_date = nil
           end
-          exchange = Assets::Exchange.find_or_create_by(name: row[:exchange])
+          exchange = Markets::Exchange.find_or_create_by(name: row[:exchange])
           identity = if row[:ticker].present?
                        if asset_type(row[:asset_class]) == 'CashEquivalent' && row[:market_currency].present?
                          Assets::Currency.find_or_initialize_by(currency: row[:market_currency])
@@ -50,7 +56,7 @@ module Holdings
           price.save!
           quantity = row[:shares].to_d
 
-          fund.holdings.build(date:, quantity:, price:, accrual_date:)
+          portfolio.holdings.build(quantity:, price:, accrual_date:)
         end
       end
 
@@ -69,7 +75,7 @@ module Holdings
       end
 
       def body
-        @body ||= @file.open(&:read)
+        @body ||= portfolio.holdings_file.open(&:read)
       end
     end
   end

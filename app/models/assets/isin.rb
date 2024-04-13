@@ -2,7 +2,7 @@
 
 module Assets
   class ISIN < Identity
-    belongs_to :exchange, class_name: 'Assets::Exchange'
+    belongs_to :exchange, class_name: 'Markets::Exchange'
 
     alias_attribute :isin, :identifier
 

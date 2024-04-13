@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Assets
+module Markets
   class Exchange < ApplicationRecord
-    validates :name, uniqueness: true, length: { minimum: 2 }
+    validates :name, length: { minimum: 2 }
   end
 end

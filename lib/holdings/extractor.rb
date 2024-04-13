@@ -6,37 +6,45 @@ module Holdings
   class UnknownStrategyError < StandardError; end
 
   class Extractor
-    attr_reader :fund
+    attr_reader :fund, :portfolio
 
     def initialize(fund)
       @fund = fund
-      return if fund.holdings_file.attached?
-      raise unless file_via_agent.code == '200'
+      @portfolio = fund.portfolio || fund.build_portfolio
 
-      fund.holdings_file.attach(io: file_via_agent.body_io, filename: file_via_agent.filename, content_type: file_via_agent.response['content_type'])
-      fund.save
+      attach_holdings_file unless portfolio.holdings_file.attached?
     end
 
     def extract_holdings
-      Holding.transaction do
-        strategy.extract
+      strategy.extract_portfolio_date
 
-        fund.save! if fund.holdings.any?
-        Rails.logger.info("#{fund.name} saved, holdings: #{fund.holdings.count}")
+      Holding.transaction do
+        strategy.extract_holdings
+
+        # debugger if portfolio.invalid?
+        portfolio.save! if portfolio.valid?
       end
     end
 
     private
 
     def strategy
-      @strategy ||= case fund.holdings_file.content_type
+      @strategy ||= case portfolio.holdings_file.content_type
                     when 'text/csv'
-                      Holdings::ExtractionStrategies::CSV.new(fund)
+                      ExtractionStrategies::CSV.new(portfolio)
                     when 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                      Holdings::ExtractionStrategies::Excel.new(fund)
+                      ExtractionStrategies::Excel.new(portfolio)
                     else
-                      raise UnknownStrategyError, fund.holdings_file
+                      raise UnknownStrategyError, portfolio.holdings_file.content_type
                     end
+    end
+
+    def attach_holdings_file # rubocop:disable Metrics/AbcSize
+      raise unless file_via_agent.code == '200'
+
+      portfolio.holdings_file.attach(io: file_via_agent.body_io, filename: file_via_agent.filename, content_type: file_via_agent.response['content_type'])
+      portfolio.date = Time.zone.today
+      portfolio.save!
     end
 
     def file_via_agent

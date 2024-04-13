@@ -23,14 +23,14 @@ module Holdings
                     asset.prices.create(date:)
                   end
 
-          fund.holdings.build(date:, quantity: row[:shares_held], price:)
+          portfolio.holdings.build(date:, quantity: row[:shares_held], price:)
         end
       end
 
       private
 
       def workbook
-        @workbook ||= RubyXL::Parser.parse(@file)
+        @workbook ||= RubyXL::Parser.parse(portfolio.holdings_file)
       rescue ::Zip::Error => e
         raise e, "XLSX file format error: #{e}", e.backtrace
       end
