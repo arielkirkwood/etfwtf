@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateHoldingsPrices < ActiveRecord::Migration[7.1]
-  def change # rubocop:disable Metrics/MethodLength
+  def change
     create_table :holdings_prices do |t|
       t.timestamps
 
@@ -12,7 +12,7 @@ class CreateHoldingsPrices < ActiveRecord::Migration[7.1]
     change_table :holdings do |t|
       t.belongs_to :price, foreign_key: { to_table: :holdings_prices }
 
-      t.index [:price_id, :fund_id, :quantity, :date], unique: true
+      t.index [:price_id, :portfolio_id, :quantity], unique: true
     end
   end
 end

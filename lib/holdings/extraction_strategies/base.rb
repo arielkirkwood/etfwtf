@@ -3,10 +3,10 @@
 module Holdings
   module ExtractionStrategies
     class Base
-      attr_reader :fund
+      attr_reader :portfolio
 
-      def initialize(fund)
-        @fund = fund
+      def initialize(portfolio)
+        @portfolio = portfolio
       end
 
       private

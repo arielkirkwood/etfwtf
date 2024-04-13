@@ -5,6 +5,6 @@ module Holdings
     has_one :price, as: :priceable, dependent: :destroy
     has_one :asset, through: :price
 
-    monetize :market_price_cents, :notional_value_cents, :unit_price_cents
+    monetize :price_cents
   end
 end
