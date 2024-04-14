@@ -16,17 +16,21 @@ module Holdings
     end
 
     def extract_holdings
-      strategy.extract_portfolio_date
+      portfolio.update!(date: strategy.date) if strategy.date != portfolio.date
 
       Holding.transaction do
-        strategy.extract_holdings
+        strategy.extract_holdings if conditions_correct?
 
-        # debugger if portfolio.invalid?
-        portfolio.save! if portfolio.valid?
+        debugger if portfolio.invalid?
+        portfolio.save!
       end
     end
 
     private
+
+    def conditions_correct?
+      portfolio.holdings.count != strategy.holdings_count
+    end
 
     def strategy
       @strategy ||= case portfolio.holdings_file.content_type

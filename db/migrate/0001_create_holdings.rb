@@ -23,6 +23,8 @@ class CreateHoldings < ActiveRecord::Migration[7.1]
       t.references :asset, null: false, foreign_key: true
       t.string :type, null: false
       t.string :identifier, null: false
+
+      t.index [:asset_id, :identifier], unique: true
     end
 
     create_table :funds do |t|

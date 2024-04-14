@@ -48,6 +48,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.string "name", null: false
     t.string "type", null: false
     t.string "sector"
+    t.string "market_identification_code"
+    t.index ["id", "market_identification_code"], name: "index_assets_on_id_and_market_identification_code", unique: true
   end
 
   create_table "assets_identities", force: :cascade do |t|
@@ -56,10 +58,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.bigint "asset_id", null: false
     t.string "type", null: false
     t.string "identifier", null: false
-    t.bigint "exchange_id"
+    t.index ["asset_id", "identifier"], name: "index_assets_identities_on_asset_id_and_identifier", unique: true
     t.index ["asset_id"], name: "index_assets_identities_on_asset_id"
-    t.index ["exchange_id"], name: "index_assets_identities_on_exchange_id"
-    t.index ["identifier", "exchange_id"], name: "index_assets_identities_on_identifier_and_exchange_id", unique: true
   end
 
   create_table "assets_managers", force: :cascade do |t|
@@ -122,10 +122,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.index ["priceable_type", "priceable_id"], name: "index_holdings_prices_on_priceable"
   end
 
-  create_table "markets_exchanges", force: :cascade do |t|
+  create_table "markets_exchanges", primary_key: "market_identification_code", id: :string, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.string "operating_market_identification_code", null: false
+    t.string "legal_entity_name"
+    t.string "country"
+    t.string "status"
+    t.index ["operating_market_identification_code"], name: "idx_on_operating_market_identification_code_a943b53c98"
   end
 
   create_table "portfolios", force: :cascade do |t|
@@ -138,8 +143,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "assets", "markets_exchanges", column: "market_identification_code", primary_key: "market_identification_code"
   add_foreign_key "assets_identities", "assets"
-  add_foreign_key "assets_identities", "markets_exchanges", column: "exchange_id"
   add_foreign_key "funds", "assets", column: "underlying_asset_id"
   add_foreign_key "funds", "assets_managers", column: "manager_id"
   add_foreign_key "holdings", "holdings_prices", column: "price_id"

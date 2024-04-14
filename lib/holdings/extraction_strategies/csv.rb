@@ -5,30 +5,28 @@ require 'csv'
 module Holdings
   module ExtractionStrategies
     class CSV < Base
-      def extract_portfolio_date
-        portfolio.update(date:)
+      def date
+        @date ||= Date.parse(body.lines[1].split('"')[1])
+      end
+
+      def holdings_count
+        @holdings_count ||= set_holdings_count
       end
 
       def extract_holdings # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
-        return unless portfolio.holdings.empty?
-
         csv.map do |row| # rubocop:disable Metrics/BlockLength
-          begin
-            accrual_date = Date.parse(row[:accrual_date])
-          rescue Date::Error
-            accrual_date = nil
-          end
-          exchange = Markets::Exchange.find_or_create_by(name: row[:exchange])
+          exchange = Markets::Exchange.iterated_search(row[:exchange]).first if row[:exchange].present? && row[:exchange].length > 2
+          asset = Asset.find_or_create_by!(asset_class: asset_type(row[:asset_class]), name: row[:name], sector: row[:sector], exchange:)
+
           identity = if row[:ticker].present?
                        if asset_type(row[:asset_class]) == 'CashEquivalent' && row[:market_currency].present?
                          Assets::Currency.find_or_initialize_by(currency: row[:market_currency])
                        else
-                         Assets::Ticker.find_or_initialize_by(ticker: row[:ticker], exchange:)
+                         Assets::Ticker.find_or_initialize_by(ticker: row[:ticker])
                        end
                      elsif row[:isin].present?
-                       Assets::ISIN.find_or_initialize_by(isin: row[:isin], exchange:)
+                       Assets::ISIN.find_or_initialize_by(isin: row[:isin])
                      end
-          asset = Asset.find_or_create_by!(asset_class: asset_type(row[:asset_class]), name: row[:name], sector: row[:sector])
           identity.update(asset:)
 
           asset_price = asset.asset_prices.first_or_initialize
@@ -48,13 +46,18 @@ module Holdings
                                maturity_date:)
           end
 
+          quantity = row[:shares].to_d
           price = asset.prices.first_or_initialize(date:, priceable: asset_price,
                                                    notional_value_cents: (row[:price].to_d * 100).to_i,
                                                    notional_value_currency: row[:currency],
                                                    market_value_cents: (row[:market_value].to_d * 100).to_i,
                                                    market_value_currency: row[:market_currency])
           price.save!
-          quantity = row[:shares].to_d
+          begin
+            accrual_date = Date.parse(row[:accrual_date])
+          rescue Date::Error
+            accrual_date = nil
+          end
 
           portfolio.holdings.build(quantity:, price:, accrual_date:)
         end
@@ -63,15 +66,22 @@ module Holdings
       private
 
       def csv
-        @csv ||= ::CSV.new rows, headers: true, converters: :numeric, header_converters: :symbol
+        @csv ||= ::CSV.new csv_string, headers: true, converters: :numeric, header_converters: :symbol
+      end
+
+      def csv_string
+        rows.join
+      end
+
+      def set_holdings_count
+        count = csv.count
+        csv.rewind
+
+        count
       end
 
       def rows
-        @rows ||= (body.lines.drop(9) - body.lines.drop(9).slice(-12, 12)).join
-      end
-
-      def date
-        @date ||= Date.parse(body.lines[1].split('"')[1])
+        @rows ||= (body.lines.drop(9) - body.lines.drop(9).slice(-12, 12))
       end
 
       def body
