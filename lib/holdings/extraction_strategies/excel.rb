@@ -13,9 +13,7 @@ module Holdings
         @date = Date.parse(workbook[0][1][1].value)
       end
 
-      def holdings_count
-        debugger
-      end
+      def holdings_count; end
 
       def extract_holdings # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         rows.map do |row|

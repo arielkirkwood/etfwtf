@@ -46,33 +46,42 @@ state_street = Assets::Manager.find_or_create_by!(name: 'State Street', holdings
 # Assets
 crbn_asset = Asset.find_or_create_by!(name: 'iShares MSCI ACWI Low Carbon Target ETF',
                                       type: 'ExchangeTradedFund',
-                                      sector: 'Global Large-Stock Blend', exchange: nyse_arca)
+                                      sector: 'Global Large-Stock Blend',
+                                      exchange: nyse_arca)
 bgrn_asset = Asset.find_or_create_by!(name: 'iShares USD Green Bond ETF',
                                       type: 'ExchangeTradedFund',
-                                      sector: 'Global Bond-USD Hedged', exchange: nyse_arca)
+                                      sector: 'Global Bond-USD Hedged',
+                                      exchange: nyse_arca)
 ivv_asset = Asset.find_or_create_by!(name: 'iShares Core S&P 500 ETF',
                                      type: 'ExchangeTradedFund',
-                                     sector: 'Large Blend', exchange: nyse_arca)
+                                     sector: 'Large Blend',
+                                     exchange: nyse_arca)
 stip_asset = Asset.find_or_create_by!(name: 'iShares 0-5 Year TIPS Bond ETF',
                                       type: 'ExchangeTradedFund',
-                                      sector: 'Inflation-Protected Bond', exchange: nyse_arca)
+                                      sector: 'Inflation-Protected Bond',
+                                      exchange: nyse_arca)
 emb_asset = Asset.find_or_create_by!(name: 'iShares J.P. Morgan USD Emerging Markets Bond ETF',
                                      type: 'ExchangeTradedFund',
-                                     sector: 'Emerging Markets Bond', exchange: nasdaq)
+                                     sector: 'Emerging Markets Bond',
+                                     exchange: nasdaq)
 
 vote_asset = Asset.find_or_create_by!(name: 'TCW Transform 500 ETF',
                                       type: 'ExchangeTradedFund',
-                                      sector: 'Large Blend', exchange: cboe)
+                                      sector: 'Large Blend',
+                                      exchange: cboe)
 
 spyx_asset = Asset.find_or_create_by!(name: 'SPDR® S&P® 500 Fossil Fuel Reserves Free ETF',
                                       type: 'ExchangeTradedFund',
-                                      sector: 'Large Blend', exchange: nyse_arca)
+                                      sector: 'Large Blend',
+                                      exchange: nyse_arca)
 efax_asset = Asset.find_or_create_by!(name: 'SPDR® MSCI EAFE Fossil Fuel Reserves Free ETF',
                                       type: 'ExchangeTradedFund',
-                                      sector: 'Foreign Large Blend', exchange: nyse_arca)
+                                      sector: 'Foreign Large Blend',
+                                      exchange: nyse_arca)
 eemx_asset = Asset.find_or_create_by!(name: 'SPDR® MSCI Emerging Markets Fossil Fuel Reserves Free ETF',
                                       type: 'ExchangeTradedFund',
-                                      sector: 'Diversified Emerging Markets', exchange: nyse_arca)
+                                      sector: 'Diversified Emerging Markets',
+                                      exchange: nyse_arca)
 
 # Tickers & identifiers
 Assets::Ticker.find_or_create_by!(asset: crbn_asset, ticker: 'CRBN')

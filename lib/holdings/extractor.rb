@@ -21,7 +21,6 @@ module Holdings
       Holding.transaction do
         strategy.extract_holdings if conditions_correct?
 
-        debugger if portfolio.invalid?
         portfolio.save!
       end
     end

@@ -17,7 +17,7 @@ module Markets
     validates :country, length: { is: 2 }
     validates :legal_entity_name, length: { minimum: 1 }, allow_nil: true
 
-    def self.iterated_search(pattern) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+    def self.iterated_search(pattern) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       return [disambiguate(pattern.upcase)] if disambiguate(pattern.upcase).present?
 
       return search(pattern) unless search(pattern).empty?
@@ -25,7 +25,7 @@ module Markets
       return search("%#{pattern}%") unless search("#{pattern}%").empty?
 
       pieces = pattern.split
-      (0...pieces.length).each do |piece_count|
+      (0...pieces.length).each do |piece_count| # rubocop:disable Lint/UnreachableLoop
         iterated_pattern = pieces[0..piece_count].join(' ')
         collection = search("%#{iterated_pattern}%")
         break collection unless collection.active.empty?
