@@ -82,13 +82,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
   create_table "holdings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "asset_id", null: false
     t.bigint "portfolio_id", null: false
     t.decimal "quantity", null: false
+    t.date "date"
     t.date "accrual_date"
-    t.bigint "price_id"
+    t.string "priceable_type"
+    t.bigint "priceable_id"
+    t.integer "notional_value_cents", default: 0, null: false
+    t.string "notional_value_currency", default: "USD", null: false
+    t.integer "market_value_cents", default: 0, null: false
+    t.string "market_value_currency", default: "USD", null: false
+    t.index ["asset_id", "priceable_id", "portfolio_id", "quantity"], name: "idx_on_asset_id_priceable_id_portfolio_id_quantity_49113a5e7b", unique: true
+    t.index ["asset_id"], name: "index_holdings_on_asset_id"
     t.index ["portfolio_id"], name: "index_holdings_on_portfolio_id"
-    t.index ["price_id", "portfolio_id", "quantity"], name: "index_holdings_on_price_id_and_portfolio_id_and_quantity", unique: true
-    t.index ["price_id"], name: "index_holdings_on_price_id"
+    t.index ["priceable_type", "priceable_id"], name: "index_holdings_on_priceable"
   end
 
   create_table "holdings_bond_prices", force: :cascade do |t|
@@ -105,21 +113,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.datetime "updated_at", null: false
     t.integer "price_cents", default: 0, null: false
     t.string "price_currency", default: "USD", null: false
-  end
-
-  create_table "holdings_prices", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "asset_id", null: false
-    t.date "date", null: false
-    t.string "priceable_type"
-    t.bigint "priceable_id"
-    t.integer "notional_value_cents", default: 0, null: false
-    t.string "notional_value_currency", default: "USD", null: false
-    t.integer "market_value_cents", default: 0, null: false
-    t.string "market_value_currency", default: "USD", null: false
-    t.index ["asset_id"], name: "index_holdings_prices_on_asset_id"
-    t.index ["priceable_type", "priceable_id"], name: "index_holdings_prices_on_priceable"
   end
 
   create_table "markets_exchanges", primary_key: "market_identification_code", id: :string, force: :cascade do |t|
@@ -147,8 +140,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
   add_foreign_key "assets_identities", "assets"
   add_foreign_key "funds", "assets", column: "underlying_asset_id"
   add_foreign_key "funds", "assets_managers", column: "manager_id"
-  add_foreign_key "holdings", "holdings_prices", column: "price_id"
+  add_foreign_key "holdings", "assets"
   add_foreign_key "holdings", "portfolios"
-  add_foreign_key "holdings_prices", "assets"
   add_foreign_key "portfolios", "funds"
 end

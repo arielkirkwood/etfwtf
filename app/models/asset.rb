@@ -13,10 +13,11 @@ class Asset < ApplicationRecord
   has_one :ticker, class_name: 'Assets::Ticker', dependent: :destroy
 
   has_many :identities, class_name: 'Assets::Identity', dependent: :destroy
-  has_many :prices, class_name: 'Holdings::Price', dependent: :destroy
-  has_many :asset_prices, through: :prices, source: :priceable, source_type: 'Holdings::EquityPrice', class_name: 'Holdings::EquityPrice', dependent: :destroy
+  has_many :holdings, dependent: :nullify
+  has_many :prices, through: :holdings, source: :priceable, source_type: 'Holdings::EquityPrice', class_name: 'Holdings::EquityPrice', dependent: :destroy
 
   validates :sector, length: { minimum: 2 }, allow_nil: true
+  validates_associated :identities
 
   alias_attribute :asset_class, :type
 end

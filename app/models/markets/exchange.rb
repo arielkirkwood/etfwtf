@@ -13,7 +13,6 @@ module Markets
     scope :active, -> { where(status: 'ACTIVE') }
 
     validates :name, length: { minimum: 2 }
-    validates :market_identification_code, uniqueness: true
     validates :country, length: { is: 2 }
     validates :legal_entity_name, length: { minimum: 1 }, allow_nil: true
 

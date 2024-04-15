@@ -29,37 +29,40 @@ module Holdings
                      end
           identity.update(asset:)
 
-          asset_price = asset.asset_prices.first_or_initialize
-          case asset_price
+          accrual_date = nil
+          if row[:accrual_date].present?
+            begin
+              accrual_date = Date.parse(row[:accrual_date])
+            rescue Date::Error
+              accrual_date = nil
+            end
+          end
+
+          holding = portfolio.holdings.build(date:, asset:, quantity: row[:shares].to_d, accrual_date:,
+                                             notional_value_cents: (row[:price].to_d * 100).to_i,
+                                             notional_value_currency: row[:currency],
+                                             market_value_cents: (row[:market_value].to_d * 100).to_i,
+                                             market_value_currency: row[:market_currency])
+          priceable = asset.prices.first_or_initialize
+
+          case priceable
           when Holdings::EquityPrice
-            asset_price.update(price_cents: (row[:price].to_d * 100).to_i,
-                               price_currency: row[:currency])
+            priceable.update(price_cents: (row[:price].to_d * 100).to_i,
+                             price_currency: row[:currency])
           when Holdings::BondPrice
             begin
               maturity_date = Date.parse(row[:maturity])
             rescue Date::Error
               maturity_date = nil
             end
-            asset_price.update(par_value_cents: (row[:par_value].to_d * 100).to_i,
-                               par_value_currency: row[:currency],
-                               coupon_rate: row[:coupon_rate].to_d,
-                               maturity_date:)
+            priceable.update(par_value_cents: (row[:par_value].to_d * 100).to_i,
+                             par_value_currency: row[:currency],
+                             coupon_rate: row[:coupon_rate].to_d,
+                             maturity_date:)
           end
+          holding.priceable = priceable
 
-          quantity = row[:shares].to_d
-          price = asset.prices.first_or_initialize(date:, priceable: asset_price,
-                                                   notional_value_cents: (row[:price].to_d * 100).to_i,
-                                                   notional_value_currency: row[:currency],
-                                                   market_value_cents: (row[:market_value].to_d * 100).to_i,
-                                                   market_value_currency: row[:market_currency])
-          price.save!
-          begin
-            accrual_date = Date.parse(row[:accrual_date])
-          rescue Date::Error
-            accrual_date = nil
-          end
-
-          portfolio.holdings.build(quantity:, price:, accrual_date:)
+          holding
         end
       end
 

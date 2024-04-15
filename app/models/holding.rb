@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
 class Holding < ApplicationRecord
+  belongs_to :asset
   belongs_to :portfolio
-  belongs_to :price, class_name: 'Holdings::Price'
+  belongs_to :priceable, polymorphic: true
 
-  has_one :asset_price, through: :price, source: :priceable, source_type: 'Holdings::EquityPrice', class_name: 'Holdings::EquityPrice'
+  has_one :exchange, through: :asset
 
-  delegate :asset, to: :price
-  delegate :asset_class, :exchange, to: :asset
+  monetize :notional_value_cents, :market_value_cents
 
+  validates :asset_id, uniqueness: { scope: [:priceable_id, :portfolio_id, :quantity] }
   validates :accrual_date, timeliness: { type: :date }, allow_nil: true
+  validates :date, timeliness: { type: :date }
   validates :quantity, numericality: true
-  validates :price, uniqueness: { scope: [:portfolio, :quantity] }
+  validates_associated :priceable
+
+  delegate :asset_class, to: :asset
 end

@@ -15,11 +15,15 @@ module Holdings
       attach_holdings_file unless portfolio.holdings_file.attached?
     end
 
-    def extract_holdings
+    def extract_holdings # rubocop:disable Metrics/AbcSize
       portfolio.update!(date: strategy.date) if strategy.date != portfolio.date
 
       Holding.transaction do
-        strategy.extract_holdings if conditions_correct?
+        if conditions_correct?
+          strategy.extract_holdings
+        else
+          Rails.logger.info("Skipping #{fund.name}, portfolio already has #{fund.portfolio.holdings.count} holdings")
+        end
 
         portfolio.save!
       end
@@ -28,7 +32,7 @@ module Holdings
     private
 
     def conditions_correct?
-      portfolio.holdings.count != strategy.holdings_count
+      portfolio.holdings.empty? && portfolio.holdings.count != strategy.holdings_count
     end
 
     def strategy
