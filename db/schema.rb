@@ -48,6 +48,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.string "name", null: false
     t.string "type", null: false
     t.string "sector"
+    t.string "market_identification_code"
+    t.index ["id", "market_identification_code"], name: "index_assets_on_id_and_market_identification_code", unique: true
   end
 
   create_table "assets_identities", force: :cascade do |t|
@@ -56,10 +58,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.bigint "asset_id", null: false
     t.string "type", null: false
     t.string "identifier", null: false
-    t.bigint "exchange_id"
+    t.index ["asset_id", "identifier"], name: "index_assets_identities_on_asset_id_and_identifier", unique: true
     t.index ["asset_id"], name: "index_assets_identities_on_asset_id"
-    t.index ["exchange_id"], name: "index_assets_identities_on_exchange_id"
-    t.index ["identifier", "exchange_id"], name: "index_assets_identities_on_identifier_and_exchange_id", unique: true
   end
 
   create_table "assets_managers", force: :cascade do |t|
@@ -67,6 +67,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.datetime "updated_at", null: false
     t.string "name", null: false
     t.string "holdings_link_text", null: false
+    t.string "backup_holdings_link_text"
   end
 
   create_table "funds", force: :cascade do |t|
@@ -82,13 +83,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
   create_table "holdings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "asset_id", null: false
     t.bigint "portfolio_id", null: false
     t.decimal "quantity", null: false
+    t.date "date"
     t.date "accrual_date"
-    t.bigint "price_id"
+    t.string "priceable_type"
+    t.bigint "priceable_id"
+    t.integer "notional_value_cents", default: 0, null: false
+    t.string "notional_value_currency", default: "USD", null: false
+    t.integer "market_value_cents", default: 0, null: false
+    t.string "market_value_currency", default: "USD", null: false
+    t.index ["asset_id"], name: "index_holdings_on_asset_id"
+    t.index ["portfolio_id", "asset_id", "priceable_id"], name: "index_holdings_on_portfolio_id_and_asset_id_and_priceable_id", unique: true
     t.index ["portfolio_id"], name: "index_holdings_on_portfolio_id"
-    t.index ["price_id", "portfolio_id", "quantity"], name: "index_holdings_on_price_id_and_portfolio_id_and_quantity", unique: true
-    t.index ["price_id"], name: "index_holdings_on_price_id"
+    t.index ["priceable_type", "priceable_id"], name: "index_holdings_on_priceable"
   end
 
   create_table "holdings_bond_prices", force: :cascade do |t|
@@ -107,25 +116,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.string "price_currency", default: "USD", null: false
   end
 
-  create_table "holdings_prices", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "asset_id", null: false
-    t.date "date", null: false
-    t.string "priceable_type"
-    t.bigint "priceable_id"
-    t.integer "notional_value_cents", default: 0, null: false
-    t.string "notional_value_currency", default: "USD", null: false
-    t.integer "market_value_cents", default: 0, null: false
-    t.string "market_value_currency", default: "USD", null: false
-    t.index ["asset_id"], name: "index_holdings_prices_on_asset_id"
-    t.index ["priceable_type", "priceable_id"], name: "index_holdings_prices_on_priceable"
-  end
-
-  create_table "markets_exchanges", force: :cascade do |t|
+  create_table "markets_exchanges", primary_key: "market_identification_code", id: :string, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.string "operating_market_identification_code", null: false
+    t.string "legal_entity_name"
+    t.string "country"
+    t.string "status"
+    t.index ["operating_market_identification_code"], name: "idx_on_operating_market_identification_code_a943b53c98"
   end
 
   create_table "portfolios", force: :cascade do |t|
@@ -138,12 +137,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "assets", "markets_exchanges", column: "market_identification_code", primary_key: "market_identification_code"
   add_foreign_key "assets_identities", "assets"
-  add_foreign_key "assets_identities", "markets_exchanges", column: "exchange_id"
   add_foreign_key "funds", "assets", column: "underlying_asset_id"
   add_foreign_key "funds", "assets_managers", column: "manager_id"
-  add_foreign_key "holdings", "holdings_prices", column: "price_id"
+  add_foreign_key "holdings", "assets"
   add_foreign_key "holdings", "portfolios"
-  add_foreign_key "holdings_prices", "assets"
   add_foreign_key "portfolios", "funds"
 end

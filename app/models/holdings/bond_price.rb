@@ -2,8 +2,7 @@
 
 module Holdings
   class BondPrice < ApplicationRecord
-    has_one :price, as: :priceable, dependent: :destroy
-    has_one :asset, through: :price
+    has_one :holding, as: :priceable, dependent: :destroy
 
     monetize :par_value_cents
 

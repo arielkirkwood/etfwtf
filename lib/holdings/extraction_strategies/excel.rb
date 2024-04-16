@@ -5,13 +5,18 @@ require 'rubyXL'
 module Holdings
   module ExtractionStrategies
     class Excel < Base
-      def extract # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-        worksheet = workbook.worksheets.first
+      HEADINGS = [:name, :ticker, :identifier, :sedol, :weight, :sector, :shares_held, :local_currency].freeze
 
-        headings = [:name, :ticker, :identifier, :sedol, :weight, :sector, :shares_held, :local_currency]
-        data = worksheet.drop(5).map { |row| headings.zip(row.cells.map(&:value)).to_h }
+      def date
+        @date ||= Date.parse(workbook[0][2][1].value.split('As of ').last)
+      rescue DateError
+        @date = Date.parse(workbook[0][1][1].value)
+      end
 
-        data.map do |row|
+      def holdings_count; end
+
+      def extract_holdings # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+        rows.map do |row|
           ticker = Assets::Ticker.find_or_create_by(ticker: row[:ticker])
           cusip = Assets::CUSIP.find_or_create_by(cusip: row[:identifier])
           sedol = Assets::SEDOL.find_or_create_by(sedol: row[:sedol])
@@ -29,16 +34,18 @@ module Holdings
 
       private
 
+      def rows
+        @rows ||= worksheet.drop(5).map { |row| HEADINGS.zip(row.cells.map(&:value)).to_h }
+      end
+
+      def worksheet
+        @worksheet ||= workbook.worksheets.first
+      end
+
       def workbook
         @workbook ||= RubyXL::Parser.parse(portfolio.holdings_file)
       rescue ::Zip::Error => e
         raise e, "XLSX file format error: #{e}", e.backtrace
-      end
-
-      def date
-        @date ||= Date.parse(workbook[0][2][1].value.split('As of ').last)
-      rescue DateError
-        @date = Date.parse(workbook[0][1][1].value)
       end
     end
   end

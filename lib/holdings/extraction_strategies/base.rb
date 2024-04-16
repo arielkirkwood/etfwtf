@@ -3,7 +3,7 @@
 module Holdings
   module ExtractionStrategies
     class Base
-      attr_reader :portfolio
+      attr_reader :date, :portfolio
 
       def initialize(portfolio)
         @portfolio = portfolio

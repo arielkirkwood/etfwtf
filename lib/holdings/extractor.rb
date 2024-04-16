@@ -10,23 +10,42 @@ module Holdings
 
     def initialize(fund)
       @fund = fund
-      @portfolio = fund.portfolio || fund.build_portfolio
+      @portfolio = fund.portfolios.any? ? fund.portfolios.order(date: :desc).first : fund.portfolios.build
 
       attach_holdings_file unless portfolio.holdings_file.attached?
+
+      replace_portfolio if conditions_warrant_replacement?
     end
 
-    def extract_holdings
-      strategy.extract_portfolio_date
+    def extract_holdings # rubocop:disable Metrics/AbcSize
+      portfolio.update!(date: strategy.date) if strategy.date != portfolio.date
 
       Holding.transaction do
-        strategy.extract_holdings
+        if portfolio_ready?
+          strategy.extract_holdings
+        else
+          Rails.logger.info("Skipping #{fund.name}, portfolio already has #{fund.portfolio.holdings.count} holdings")
+        end
 
-        # debugger if portfolio.invalid?
-        portfolio.save! if portfolio.valid?
+        portfolio.save!
       end
     end
 
     private
+
+    def portfolio_ready?
+      portfolio.holdings.empty? && portfolio.holdings.count != strategy.holdings_count
+    end
+
+    def conditions_warrant_replacement?
+      !portfolio.holdings.empty? &&
+        portfolio.date < 1.day.before(exchange_status.open_time.to_date) &&
+        exchange_status.business_day? && exchange_status.open?
+    end
+
+    def exchange_status
+      @exchange_status ||= fund.exchange_status
+    end
 
     def strategy
       @strategy ||= case portfolio.holdings_file.content_type
@@ -47,9 +66,16 @@ module Holdings
       portfolio.save!
     end
 
-    def file_via_agent
+    def replace_portfolio
+      @portfolio = fund.portfolios.build
+      attach_holdings_file
+    end
+
+    def file_via_agent # rubocop:disable Metrics/AbcSize
       agent.get(fund.public_url)
       agent.click(agent.page.link_with!(text: fund.manager.holdings_link_text))
+    rescue Mechanize::ElementNotFoundError
+      agent.click(agent.page.link_with!(text: fund.manager.backup_holdings_link_text))
     end
 
     def agent
