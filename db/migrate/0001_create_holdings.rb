@@ -7,6 +7,7 @@ class CreateHoldings < ActiveRecord::Migration[7.1]
 
       t.string :name, null: false
       t.string :holdings_link_text, null: false
+      t.string :backup_holdings_link_text
     end
 
     create_table :assets do |t|

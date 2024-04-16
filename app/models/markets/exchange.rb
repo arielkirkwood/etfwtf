@@ -4,6 +4,8 @@ module Markets
   class Exchange < ApplicationRecord
     self.primary_key = :market_identification_code
 
+    alias_attribute :mic, :market_identification_code
+
     belongs_to :operating_exchange, # rubocop:disable Rails/InverseOf
                class_name: 'Markets::Exchange',
                primary_key: :market_identification_code,
@@ -73,6 +75,14 @@ module Markets
       else
         active.where('name LIKE ?', pattern.upcase).or(where('legal_entity_name LIKE ?', pattern.upcase))
       end
+    end
+
+    def active?
+      status == 'ACTIVE'
+    end
+
+    def expired?
+      status == 'EXPIRED'
     end
   end
 end

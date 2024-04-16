@@ -67,6 +67,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.datetime "updated_at", null: false
     t.string "name", null: false
     t.string "holdings_link_text", null: false
+    t.string "backup_holdings_link_text"
   end
 
   create_table "funds", force: :cascade do |t|
@@ -93,8 +94,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.string "notional_value_currency", default: "USD", null: false
     t.integer "market_value_cents", default: 0, null: false
     t.string "market_value_currency", default: "USD", null: false
-    t.index ["asset_id", "priceable_id", "portfolio_id", "quantity"], name: "idx_on_asset_id_priceable_id_portfolio_id_quantity_49113a5e7b", unique: true
     t.index ["asset_id"], name: "index_holdings_on_asset_id"
+    t.index ["portfolio_id", "asset_id", "priceable_id"], name: "index_holdings_on_portfolio_id_and_asset_id_and_priceable_id", unique: true
     t.index ["portfolio_id"], name: "index_holdings_on_portfolio_id"
     t.index ["priceable_type", "priceable_id"], name: "index_holdings_on_priceable"
   end

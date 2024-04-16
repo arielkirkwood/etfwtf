@@ -7,8 +7,9 @@
 require 'csv'
 require 'mechanize'
 
-Rails.logger = Logger.new($stdout)
 MARKET_EXCHANGES_FILENAME = 'ISO10383_MIC.csv'
+
+Rails.logger = Logger.new($stdout)
 
 agent = Mechanize.new do |config|
   config.user_agent_alias = 'iPhone'
@@ -39,7 +40,7 @@ nasdaq = Markets::Exchange.iterated_search('NASDAQ').first
 cboe = Markets::Exchange.iterated_search('Cboe BZX formerly known as BATS').first
 
 # Managers
-ishares = Assets::Manager.find_or_create_by!(name: 'iShares', holdings_link_text: 'Detailed Holdings and Analytics')
+ishares = Assets::Manager.find_or_create_by!(name: 'iShares', holdings_link_text: 'Download Holdings', backup_holdings_link_text: 'Detailed Holdings and Analytics')
 tcw = Assets::Manager.find_or_create_by!(name: 'TCW', holdings_link_text: 'Download')
 state_street = Assets::Manager.find_or_create_by!(name: 'State Street', holdings_link_text: 'Daily')
 

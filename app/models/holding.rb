@@ -9,8 +9,8 @@ class Holding < ApplicationRecord
 
   monetize :notional_value_cents, :market_value_cents
 
-  validates :asset_id, uniqueness: { scope: [:priceable_id, :portfolio_id, :quantity] }
   validates :accrual_date, timeliness: { type: :date }, allow_nil: true
+  validates :asset, uniqueness: { scope: [:portfolio, :priceable_id] }
   validates :date, timeliness: { type: :date }
   validates :quantity, numericality: true
   validates_associated :priceable
