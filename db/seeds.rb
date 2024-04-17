@@ -17,12 +17,8 @@ agent = Mechanize.new do |config|
 end
 
 # Exchanges
-if File.exist?(MARKET_EXCHANGES_FILENAME)
-  exchanges = CSV.table(MARKET_EXCHANGES_FILENAME)
-else
-  market_exchanges_file = agent.download('https://www.iso20022.org/sites/default/files/ISO10383_MIC/ISO10383_MIC.csv')
-  exchanges = CSV.table(market_exchanges_file)
-end
+agent.download('https://www.iso20022.org/sites/default/files/ISO10383_MIC/ISO10383_MIC.csv', MARKET_EXCHANGES_FILENAME) unless File.exist?(MARKET_EXCHANGES_FILENAME)
+exchanges = CSV.table(MARKET_EXCHANGES_FILENAME)
 
 exchanges.each do |row|
   Markets::Exchange.find_or_create_by!(
