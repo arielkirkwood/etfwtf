@@ -14,7 +14,7 @@ module Holdings
 
       attach_holdings_file unless portfolio.holdings_file.attached?
 
-      replace_portfolio if conditions_warrant_replacement?
+      replace_portfolio if Rails.env.production? || conditions_warrant_replacement?
     end
 
     def extract_holdings # rubocop:disable Metrics/AbcSize

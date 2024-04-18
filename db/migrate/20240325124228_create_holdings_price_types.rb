@@ -8,7 +8,7 @@ class CreateHoldingsPriceTypes < ActiveRecord::Migration[7.1]
       t.monetize :notional_value, null: false
       t.monetize :market_value, null: false
 
-      t.index [:portfolio_id, :asset_id, :priceable_id], unique: true
+      t.index [:portfolio_id, :asset_id], unique: true
     end
 
     create_table :holdings_bond_prices do |t|
