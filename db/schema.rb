@@ -95,7 +95,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.integer "market_value_cents", default: 0, null: false
     t.string "market_value_currency", default: "USD", null: false
     t.index ["asset_id"], name: "index_holdings_on_asset_id"
-    t.index ["portfolio_id", "asset_id"], name: "index_holdings_on_portfolio_id_and_asset_id", unique: true
     t.index ["portfolio_id"], name: "index_holdings_on_portfolio_id"
     t.index ["priceable_type", "priceable_id"], name: "index_holdings_on_priceable"
   end
