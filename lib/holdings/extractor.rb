@@ -59,6 +59,7 @@ module Holdings
     end
 
     def replace_portfolio
+      portfolio.destroy
       @portfolio = fund.portfolios.build
       attach_holdings_file
     end
