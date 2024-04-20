@@ -3,6 +3,11 @@
 module Markets
   module API
     class Status < Model
+      # common markets missing from trading calendar with solution alias
+      MISSING_MICS = {
+        'XNAS' => 'XNYS'
+      }.freeze
+
       collection_path 'markets/status'
 
       def local_time
@@ -10,11 +15,11 @@ module Markets
       end
 
       def open_time
-        Time.zone.parse(attributes[:open_time])
+        Time.zone.parse(attributes[:open_time]) if attributes[:open_time].present?
       end
 
       def close_time
-        Time.zone.parse(attributes[:close_time])
+        Time.zone.parse(attributes[:close_time]) if attributes[:close_time].present?
       end
 
       def weekend?

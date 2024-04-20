@@ -44,6 +44,8 @@ class CreateHoldings < ActiveRecord::Migration[7.1]
       t.belongs_to :fund, null: false, foreign_key: true
 
       t.date :date, null: false
+
+      t.index [:fund_id, :date], unique: true
     end
 
     create_table :holdings do |t|

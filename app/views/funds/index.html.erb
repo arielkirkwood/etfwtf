@@ -1,5 +1,22 @@
 <div class="container">
-  <ul>
-    <%= render @funds %>
-  </ul>
+  <h1>Hi! My name is Ariel Kirkwood</h1>
+  <div class="row justify-content-center">
+    <div class="col-10 col-sm-4">
+      <div class="card">
+        <img src="https://0.gravatar.com/avatar/357b472db2e04bd222ba50b8c19daaab56e509596f45dc860c68d8bf6fe6087b?size=1080" alt="" class="card-img-top">
+        <div class="card-body">
+          <p>I'd like to share WTF (what the f***) is in my ETFs (exchange traded funds) that I invest in for retirement, via <%= link_to 'Betterment', 'https://www.betterment.com/' %></a>.</p>
+          <p>It's far too easy to get lost in the fact that ETFs can be massive baskets of other assets - let's see what's inside!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-8">
+      <p>For my current retirement portfolio, I've chosen Betterment's <%= link_to 'Climate Impact', 'https://www.betterment.com/socially-responsible-climate-impact-portfolio' %> portfolio; mine has the following funds within it:</p>
+
+      <ul class="list-unstyled">
+        <%= render partial: 'link', collection: @funds, as: :fund, layout: 'list_item' %>
+      </ul>
+    </div>
+  </div>
 </div>
