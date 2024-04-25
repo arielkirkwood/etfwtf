@@ -2,7 +2,7 @@
 
 class Fund < ApplicationRecord
   belongs_to :manager, class_name: 'Assets::Manager'
-  belongs_to :underlying_asset, class_name: 'Asset'
+  belongs_to :underlying_asset, class_name: 'Asset', inverse_of: :fund
 
   has_one :latest_portfolio, -> { order date: :desc }, class_name: 'Portfolio', inverse_of: :fund, dependent: :destroy
   has_one :exchange, through: :underlying_asset
@@ -14,7 +14,7 @@ class Fund < ApplicationRecord
   has_many :assets, through: :holdings
 
   delegate :extract_holdings, to: :holdings_extractor
-  delegate :name, :ticker, to: :underlying_asset
+  delegate :name, to: :underlying_asset
 
   validates :underlying_asset_id, uniqueness: true
 

@@ -11,6 +11,7 @@ class Asset < ApplicationRecord
 
   has_one :isin, class_name: 'Assets::ISIN', dependent: :destroy
   has_one :ticker, class_name: 'Assets::Ticker', dependent: :destroy
+  has_one :fund, foreign_key: 'underlying_asset_id', dependent: :destroy, inverse_of: :underlying_asset
 
   has_many :identities, class_name: 'Assets::Identity', dependent: :destroy
   has_many :holdings, dependent: :nullify

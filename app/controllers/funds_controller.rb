@@ -6,6 +6,7 @@ class FundsController < ApplicationController
   end
 
   def show
-    @fund = Fund.includes(:holdings).find_by(underlying_asset_id: Assets::Ticker.find_by(identifier: params[:ticker].upcase).asset_id)
+    @ticker = Assets::Ticker.find_by(ticker: params[:ticker].upcase)
+    @fund = @ticker.asset.fund
   end
 end
