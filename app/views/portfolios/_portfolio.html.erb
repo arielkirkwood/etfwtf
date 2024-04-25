@@ -1,3 +1,6 @@
-<p>The point of this page is to be able to share information about the fund's portfolio better than the actual fund's <%= link_to 'holdings page', portfolio.fund.public_url %>.</p>
+<h2>Latest portfolio:</h2>
 
-<p>Today's portfolio has <%= number_with_delimiter(portfolio.holdings.count) %> different holdings in it.<p>
+<p><%= render portfolio.fund.ticker %> has <%= number_with_delimiter(portfolio.holdings.count) %> different holdings in it as of <%= portfolio.date.to_fs(:long) %>.<p>
+
+<p>The point of this section is to be able to share information about the fund's portfolio better than the actual fund's <%= link_to 'holdings page', portfolio.fund.public_url %>.</p>
+

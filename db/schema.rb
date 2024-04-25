@@ -76,6 +76,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.bigint "manager_id", null: false
     t.bigint "underlying_asset_id", null: false
     t.string "public_url", null: false
+    t.text "betterment_detail", null: false
     t.index ["manager_id"], name: "index_funds_on_manager_id"
     t.index ["underlying_asset_id"], name: "index_funds_on_underlying_asset_id", unique: true
   end

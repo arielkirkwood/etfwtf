@@ -36,6 +36,7 @@ class CreateHoldings < ActiveRecord::Migration[7.1]
       t.belongs_to :underlying_asset, null: false, foreign_key: { to_table: :assets }, index: { unique: true }
 
       t.string :public_url, null: false
+      t.text :betterment_detail, null: false
     end
 
     create_table :portfolios do |t|

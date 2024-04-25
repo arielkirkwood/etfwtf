@@ -1,4 +1,13 @@
 <div class="h3"><%= render fund.ticker %></div>
 <%= tag.h1 fund.name %>
 
+<%= tag.blockquote class: 'blockquote' do %>
+  <figcaption class="blockquote-footer mt-0 mb-3">
+    <cite><strong>Betterment</strong></cite> says about this fund:
+  </figcaption>
+  <%= fund.betterment_detail %>
+<% end %>
+
+<hr>
+
 <%= render fund.latest_portfolio %>

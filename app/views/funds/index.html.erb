@@ -15,7 +15,14 @@
     </div>
 
     <div class="col-sm-8">
-      <p>For my current retirement portfolio, I've chosen Betterment's <%= link_to 'Climate Impact', 'https://www.betterment.com/socially-responsible-climate-impact-portfolio' %> portfolio; mine has the following funds within it:</p>
+      <p><strong>What is an ETF?</strong> Investopedia says:</p>
+      <blockquote class="blockquote">
+        An exchange-traded fund (ETF) is a pooled investment security that can be bought and sold like an individual stock. ETFs can be structured to track anything from the price of a commodity to a large and diverse collection of securities.
+      </blockquote>
+
+      <p>As someone looking to invest in my retirement without constantly having to check up on the state of it and making unnecessary investment decisions, I heavily lean on Betterment's "robo-advising" to choose funds and the weights of those funds for me.</p>
+
+      <p>For my current retirement goal, I've chosen Betterment's <%= link_to 'Climate Impact', 'https://www.betterment.com/socially-responsible-climate-impact-portfolio' %> portfolio; mine currently has the following funds within it:</p>
 
       <ul class="list-unstyled">
         <%= render partial: 'link', collection: @funds, as: :fund, layout: 'list_item' %>
