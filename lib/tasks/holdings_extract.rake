@@ -2,8 +2,6 @@
 
 desc "Update existing funds' holdings."
 
-Rails.logger = Logger.new($stdout)
-
 namespace :holdings do
   task extract: [:environment] do
     managers = Assets::Manager.where(name: 'iShares').all
