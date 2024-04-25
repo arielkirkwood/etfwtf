@@ -43,22 +43,24 @@ module Holdings
                                              notional_value_currency: row[:currency],
                                              market_value_cents: (row[:market_value].to_d * 100).to_i,
                                              market_value_currency: row[:market_currency])
-          priceable = asset.prices.first_or_initialize
 
+          # Initialize a blank one to get the type
+          priceable = asset.prices.build
+          # Then when we know the type, find-or-init with data
           case priceable
           when Holdings::EquityPrice
-            priceable.update(price_cents: (row[:price].to_d * 100).to_i,
-                             price_currency: row[:currency])
+            priceable = asset.prices.find_or_initialize_by(price_cents: (row[:price].to_d * 100).to_i,
+                                                           price_currency: row[:currency])
           when Holdings::BondPrice
             begin
               maturity_date = Date.parse(row[:maturity])
             rescue Date::Error
               maturity_date = nil
             end
-            priceable.update(par_value_cents: (row[:par_value].to_d * 100).to_i,
-                             par_value_currency: row[:currency],
-                             coupon_rate: row[:coupon_rate].to_d,
-                             maturity_date:)
+            priceable = asset.prices.find_or_initialize_by(par_value_cents: (row[:par_value].to_d * 100).to_i,
+                                                           par_value_currency: row[:currency],
+                                                           coupon_rate: row[:coupon_rate].to_d,
+                                                           maturity_date:)
           end
           holding.priceable = priceable
 

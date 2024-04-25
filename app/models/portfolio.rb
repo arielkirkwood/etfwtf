@@ -7,6 +7,6 @@ class Portfolio < ApplicationRecord
 
   has_many :holdings, dependent: :destroy
 
-  validates :date, timeliness: { type: :date }
+  validates :date, timeliness: { type: :date }, uniqueness: { scope: [:fund_id] }
   validates_associated :holdings
 end

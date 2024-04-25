@@ -76,6 +76,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.bigint "manager_id", null: false
     t.bigint "underlying_asset_id", null: false
     t.string "public_url", null: false
+    t.text "betterment_detail", null: false
     t.index ["manager_id"], name: "index_funds_on_manager_id"
     t.index ["underlying_asset_id"], name: "index_funds_on_underlying_asset_id", unique: true
   end
@@ -94,8 +95,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.string "notional_value_currency", default: "USD", null: false
     t.integer "market_value_cents", default: 0, null: false
     t.string "market_value_currency", default: "USD", null: false
+    t.index ["asset_id", "portfolio_id", "priceable_id"], name: "index_holdings_on_asset_id_and_portfolio_id_and_priceable_id", unique: true
     t.index ["asset_id"], name: "index_holdings_on_asset_id"
-    t.index ["portfolio_id", "asset_id", "priceable_id"], name: "index_holdings_on_portfolio_id_and_asset_id_and_priceable_id", unique: true
     t.index ["portfolio_id"], name: "index_holdings_on_portfolio_id"
     t.index ["priceable_type", "priceable_id"], name: "index_holdings_on_priceable"
   end
@@ -132,6 +133,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.datetime "updated_at", null: false
     t.bigint "fund_id", null: false
     t.date "date", null: false
+    t.index ["fund_id", "date"], name: "index_portfolios_on_fund_id_and_date", unique: true
     t.index ["fund_id"], name: "index_portfolios_on_fund_id"
   end
 
