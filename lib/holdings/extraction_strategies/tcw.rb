@@ -25,9 +25,16 @@ module Holdings
         @date ||= Date.parse(worksheet[1][1].value)
       end
 
-      def extract_holdings # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
+      def extract_holdings # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
         working_sheet.map do |row|
-          asset = Asset.find_or_create_by!(name: row[:description], asset_class: asset_type(row[:security_type]))
+          asset = if (ticker = Assets::Ticker.where(ticker: row[:ticker]).first)
+                    ticker.asset
+                  elsif (cusip = Assets::CUSIP.where(cusip: row[:cusip]).first)
+                    cusip.asset
+                  elsif (sedol = Assets::SEDOL.where(sedol: row[:sedol]).first)
+                    sedol.asset
+                  end
+          asset = Asset.find_or_create_by!(name: row[:description], asset_class: asset_type(row[:security_type])) if asset.blank?
 
           Assets::Ticker.find_or_create_by(asset:, ticker: row[:ticker]) if row[:ticker] != 'n/a'
           Assets::Currency.find_or_create_by(asset:, currency: row[:asset_currency]) if asset_type(row[:security_type]) == 'CashEquivalent' && row[:asset_currency].present?
