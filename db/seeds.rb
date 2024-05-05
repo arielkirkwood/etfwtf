@@ -9,8 +9,6 @@ require 'mechanize'
 
 MARKET_EXCHANGES_FILENAME = 'ISO10383_MIC.csv'
 
-Rails.logger = Logger.new($stdout)
-
 agent = Mechanize.new do |config|
   config.user_agent_alias = 'iPhone'
   config.pluggable_parser.default = Mechanize::Download
@@ -49,10 +47,6 @@ bgrn_asset = Asset.find_or_create_by!(name: 'iShares USD Green Bond ETF',
                                       type: 'ExchangeTradedFund',
                                       sector: 'Global Bond-USD Hedged',
                                       exchange: nyse_arca)
-# ivv_asset = Asset.find_or_create_by!(name: 'iShares Core S&P 500 ETF',
-#                                      type: 'ExchangeTradedFund',
-#                                      sector: 'Large Blend',
-#                                      exchange: nyse_arca)
 stip_asset = Asset.find_or_create_by!(name: 'iShares 0-5 Year TIPS Bond ETF',
                                       type: 'ExchangeTradedFund',
                                       sector: 'Inflation-Protected Bond',
@@ -83,7 +77,6 @@ eemx_asset = Asset.find_or_create_by!(name: 'SPDR® MSCI Emerging Markets Fossil
 # Tickers & identifiers
 Assets::Ticker.find_or_create_by!(asset: crbn_asset, ticker: 'CRBN')
 Assets::Ticker.find_or_create_by!(asset: bgrn_asset, ticker: 'BGRN')
-# Assets::Ticker.find_or_create_by!(asset: ivv_asset, ticker: 'IVV')
 Assets::Ticker.find_or_create_by!(asset: stip_asset, ticker: 'STIP')
 Assets::Ticker.find_or_create_by!(asset: emb_asset, ticker: 'EMB')
 Assets::Ticker.find_or_create_by!(asset: vote_asset, ticker: 'VOTE')
@@ -108,10 +101,6 @@ Fund.find_or_create_by!(
   betterment_detail: 'BGRN is the primary ETF used to gain exposure to global green bonds. The green bonds held by BGRN fund projects supporting alternative energy, energy efficiency, pollution ' \
                      'prevention and control, sustainable water, green building, and climate adaptation.'
 )
-# Fund.find_or_create_by!(
-#   underlying_asset: ivv_asset, manager: ishares, public_url: 'https://www.ishares.com/us/products/239726/',
-#   betterment_detail: ''
-# )
 Fund.find_or_create_by!(
   underlying_asset: stip_asset, manager: ishares, public_url: 'https://www.ishares.com/us/products/239450/',
   betterment_detail: 'STIP is the selected ETF used to gain exposure to U.S. Inflation-Protected Bonds due to its competitive bid-ask spread, low expense ratio, and robust asset base.'

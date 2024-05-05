@@ -3,7 +3,10 @@
 module Holdings
   module ExtractionStrategies
     class Base
-      attr_reader :date, :portfolio
+      ROWS_TO_DROP = 0
+      ROWS_TO_SLICE = 0
+
+      attr_reader :portfolio
 
       def initialize(portfolio)
         @portfolio = portfolio
@@ -11,23 +14,8 @@ module Holdings
 
       private
 
-      def asset_type(asset_class) # rubocop:disable Metrics/MethodLength
-        case asset_class
-        when 'Bond', 'Fixed Income'
-          'Bond'
-        when 'Cash', 'Cash Collateral and Margins'
-          'CashEquivalent'
-        when 'Derivatives', 'Futures'
-          'Derivative'
-        when 'Equity'
-          'Equity'
-        when 'FX'
-          'ForexCurrency'
-        when 'Money Market'
-          'MoneyMarketFund'
-        else
-          raise Asset::UnknownTypeError, asset_class
-        end
+      def body
+        @body ||= portfolio.holdings_file.open(&:read)
       end
     end
   end

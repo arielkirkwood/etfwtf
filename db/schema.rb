@@ -49,7 +49,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.string "type", null: false
     t.string "sector"
     t.string "market_identification_code"
-    t.index ["id", "market_identification_code"], name: "index_assets_on_id_and_market_identification_code", unique: true
+    t.index ["name", "type", "sector", "market_identification_code"], name: "idx_on_name_type_sector_market_identification_code_5048768d5e", unique: true
   end
 
   create_table "assets_identities", force: :cascade do |t|
@@ -91,9 +91,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
     t.date "accrual_date"
     t.string "priceable_type"
     t.bigint "priceable_id"
-    t.integer "notional_value_cents", default: 0, null: false
+    t.bigint "notional_value_cents", default: 0, null: false
     t.string "notional_value_currency", default: "USD", null: false
-    t.integer "market_value_cents", default: 0, null: false
+    t.bigint "market_value_cents", default: 0, null: false
     t.string "market_value_currency", default: "USD", null: false
     t.index ["asset_id", "portfolio_id", "priceable_id"], name: "index_holdings_on_asset_id_and_portfolio_id_and_priceable_id", unique: true
     t.index ["asset_id"], name: "index_holdings_on_asset_id"
@@ -104,7 +104,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
   create_table "holdings_bond_prices", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "par_value_cents", default: 0, null: false
+    t.bigint "par_value_cents", default: 0, null: false
     t.string "par_value_currency", default: "USD", null: false
     t.decimal "coupon_rate", null: false
     t.date "maturity_date"
@@ -113,7 +113,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_27_214316) do
   create_table "holdings_equity_prices", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "price_cents", default: 0, null: false
+    t.bigint "price_cents", default: 0, null: false
     t.string "price_currency", default: "USD", null: false
   end
 
