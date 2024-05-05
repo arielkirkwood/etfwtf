@@ -1,13 +1,18 @@
 <div class="h3"><%= render @ticker %></div>
 <%= tag.h1 fund.name %>
 
+<div class="h6 mb-3">
+  <span class="badge text-bg-primary"><%= tag.strong fund.type.underscore.humanize %></span>
+  <span class="badge text-bg-primary"><%= tag.strong fund.sector %></span>
+</div>
+
+<hr>
+
 <%= tag.blockquote class: 'blockquote' do %>
   <figcaption class="blockquote-footer mt-0 mb-3">
     <cite><strong>Betterment</strong></cite> says about this fund:
   </figcaption>
   <%= fund.betterment_detail %>
 <% end %>
-
-<hr>
 
 <%= render fund.latest_portfolio %>

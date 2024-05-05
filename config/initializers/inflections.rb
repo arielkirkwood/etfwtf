@@ -20,6 +20,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'ISIN'
   inflect.acronym 'RESTful'
   inflect.acronym 'SEDOL'
+  inflect.acronym 'TCW'
   inflect.acronym 'XLSX'
   inflect.acronym 'XML'
 end
