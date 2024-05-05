@@ -2,7 +2,7 @@
 
 class FundsController < ApplicationController
   def index
-    @funds = Fund.includes(:underlying_asset, :ticker).where(manager_id: 1)
+    @funds = Fund.includes(:underlying_asset, :ticker).where(manager_id: [1, 2])
   end
 
   def show

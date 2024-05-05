@@ -15,7 +15,7 @@ class CreateMarketsExchanges < ActiveRecord::Migration[7.1]
     change_table :assets do |t|
       t.string :market_identification_code
 
-      t.index [:id, :market_identification_code], unique: true
+      t.index [:name, :type, :sector, :market_identification_code], unique: true
     end
 
     add_foreign_key :assets, :markets_exchanges, column: :market_identification_code, primary_key: :market_identification_code
