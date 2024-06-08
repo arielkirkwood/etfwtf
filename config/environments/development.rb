@@ -4,6 +4,9 @@ require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do # rubocop:disable Metrics/BlockLength
   # Settings specified here will take precedence over those in config/application.rb.
+  config.logger = ActiveSupport::Logger.new($stdout)
+                                       .tap  { |logger| logger.formatter = Logger::Formatter.new }
+                                       .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
 
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
