@@ -29,6 +29,7 @@ exchanges.each do |row|
   )
 end
 
+nyse = Markets::Exchange.find('XNYS')
 nyse_arca = Markets::Exchange.iterated_search('NYSE ARCA').first
 nasdaq = Markets::Exchange.iterated_search('NASDAQ').first
 cboe = Markets::Exchange.iterated_search('Cboe BZX formerly known as BATS').first
@@ -47,10 +48,10 @@ bgrn_asset = Asset.find_or_create_by!(name: 'iShares USD Green Bond ETF',
                                       type: 'ExchangeTradedFund',
                                       sector: 'Global Bond-USD Hedged',
                                       exchange: nyse_arca)
-stip_asset = Asset.find_or_create_by!(name: 'iShares 0-5 Year TIPS Bond ETF',
+esml_asset = Asset.find_or_create_by!(name: 'iShares ESG Aware MSCI USA Small-Cap ETF',
                                       type: 'ExchangeTradedFund',
-                                      sector: 'Inflation-Protected Bond',
-                                      exchange: nyse_arca)
+                                      sector: 'Small Blend',
+                                      exchange: cboe)
 emb_asset = Asset.find_or_create_by!(name: 'iShares J.P. Morgan USD Emerging Markets Bond ETF',
                                      type: 'ExchangeTradedFund',
                                      sector: 'Emerging Markets Bond',
@@ -59,7 +60,7 @@ emb_asset = Asset.find_or_create_by!(name: 'iShares J.P. Morgan USD Emerging Mar
 vote_asset = Asset.find_or_create_by!(name: 'TCW Transform 500 ETF',
                                       type: 'ExchangeTradedFund',
                                       sector: 'Large Blend',
-                                      exchange: cboe)
+                                      exchange: nyse)
 
 spyx_asset = Asset.find_or_create_by!(name: 'SPDR® S&P® 500 Fossil Fuel Reserves Free ETF',
                                       type: 'ExchangeTradedFund',
@@ -77,7 +78,7 @@ eemx_asset = Asset.find_or_create_by!(name: 'SPDR® MSCI Emerging Markets Fossil
 # Tickers & identifiers
 Assets::Ticker.find_or_create_by!(asset: crbn_asset, ticker: 'CRBN')
 Assets::Ticker.find_or_create_by!(asset: bgrn_asset, ticker: 'BGRN')
-Assets::Ticker.find_or_create_by!(asset: stip_asset, ticker: 'STIP')
+Assets::Ticker.find_or_create_by!(asset: esml_asset, ticker: 'ESML')
 Assets::Ticker.find_or_create_by!(asset: emb_asset, ticker: 'EMB')
 Assets::Ticker.find_or_create_by!(asset: vote_asset, ticker: 'VOTE')
 
@@ -102,8 +103,9 @@ Fund.find_or_create_by!(
                      'prevention and control, sustainable water, green building, and climate adaptation.'
 )
 Fund.find_or_create_by!(
-  underlying_asset: stip_asset, manager: ishares, public_url: 'https://www.ishares.com/us/products/239450/',
-  betterment_detail: 'STIP is the selected ETF used to gain exposure to U.S. Inflation-Protected Bonds due to its competitive bid-ask spread, low expense ratio, and robust asset base.'
+  underlying_asset: esml_asset, manager: ishares, public_url: 'https://www.ishares.com/us/products/296644/',
+  betterment_detail: "This set of holdings offers exposure to small-cap growth stocks. This class of growth stocks helps to avoid over-weighting a portfolio's value tilt while also contributing " \
+                     "to a portfolio's size tilt. U.S. small cap stocks are typically defined as those companies with below $1 billion in market capitalization in the United States."
 )
 Fund.find_or_create_by!(
   underlying_asset: emb_asset, manager: ishares, public_url: 'https://www.ishares.com/us/products/239572/',

@@ -24,4 +24,8 @@ class Asset < ApplicationRecord
   validates_associated :identities
 
   alias_attribute :asset_class, :type
+
+  def to_param
+    ticker.identifier.downcase
+  end
 end
