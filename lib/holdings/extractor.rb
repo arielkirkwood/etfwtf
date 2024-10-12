@@ -74,8 +74,12 @@ module Holdings
           portfolio.holdings_file.attach(io: File.open(filename), filename:)
         end
       when 'TCW'
-        filename = "#{fund.ticker.identifier}_holdings.xlsx"
-        portfolio.holdings_file.attach(io: File.open(filename), filename:)
+        begin
+          portfolio.holdings_file.attach(io: file_via_agent.body_io, filename: file_via_agent.filename, content_type: file_via_agent.response['content_type'])
+        rescue Mechanize::ResponseCodeError
+          filename = "#{fund.ticker.identifier}_holdings.xlsx"
+          portfolio.holdings_file.attach(io: File.open(filename), filename:)
+        end
       end
 
       portfolio.date = Time.zone.today

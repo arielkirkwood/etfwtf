@@ -21,7 +21,8 @@ module Holdings
       ROWS_TO_DROP = 1
 
       def date
-        @date ||= Date.parse(worksheet[1][1].value)
+        worksheet_date_parts = worksheet[1][1].value.split('/')
+        @date ||= Date.parse("#{worksheet_date_parts[2]}/#{worksheet_date_parts[0]}/#{worksheet_date_parts[1]}")
       end
 
       def extract_holdings # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
