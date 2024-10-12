@@ -5,8 +5,8 @@ class CreateHoldingsPriceTypes < ActiveRecord::Migration[7.1]
     change_table :holdings, bulk: true do |t|
       t.references :priceable, polymorphic: true
 
-      t.monetize :notional_value, null: false
-      t.monetize :market_value, null: false
+      t.monetize :notional_value, null: false, default: 0
+      t.monetize :market_value, null: false, default: 0
 
       t.index [:asset_id, :portfolio_id, :priceable_id], unique: true
     end

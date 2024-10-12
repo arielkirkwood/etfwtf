@@ -65,7 +65,7 @@ group :development, :test do
   gem 'bundler-audit', '~> 0.9.1'
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: [:mri, :windows]
-  gem 'rubocop-rails', '~> 2.24'
+  gem 'rubocop-rails', '~> 2.26'
 end
 
 group :development do
