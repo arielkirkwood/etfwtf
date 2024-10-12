@@ -19,7 +19,6 @@ module Holdings
         :market_value_weight
       ].freeze
       ROWS_TO_DROP = 1
-      ROWS_TO_SLICE = 0
 
       def date
         @date ||= Date.parse(worksheet[1][1].value)

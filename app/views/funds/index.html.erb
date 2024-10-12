@@ -2,15 +2,19 @@
   <h1>Hi! My name is Ariel Kirkwood</h1>
 
   <div class="row justify-content-center mb-3">
-    <div class="col-sm-7">
+    <div class="col-sm-8">
       <p><strong>What is an ETF?</strong> Investopedia says:</p>
       <blockquote class="blockquote">
         An exchange-traded fund (ETF) is a pooled investment security that can be bought and sold like an individual stock. ETFs can be structured to track anything from the price of a commodity to a large and diverse collection of securities.
       </blockquote>
       <p>As someone looking to invest in my retirement without constantly having to check up on the state of it and making unnecessary investment decisions, I heavily lean on Betterment's "robo-advising" to choose funds and the weights of those funds for me.</p>
+      <p>For my current retirement goal, I've chosen Betterment's <%= link_to 'Climate Impact', 'https://www.betterment.com/socially-responsible-climate-impact-portfolio' %> portfolio; mine currently has the following funds within it:</p>
+      <ul class="list-unstyled">
+        <%= render partial: 'link', collection: @funds, as: :fund, layout: 'list_item' %>
+      </ul>
     </div>
 
-    <div class="col-10 col-sm-5">
+    <div class="col-10 col-sm-4">
       <div class="card">
         <img src="https://0.gravatar.com/avatar/357b472db2e04bd222ba50b8c19daaab56e509596f45dc860c68d8bf6fe6087b?size=540"
              srcset="https://0.gravatar.com/avatar/357b472db2e04bd222ba50b8c19daaab56e509596f45dc860c68d8bf6fe6087b?size=1080 2x"
@@ -21,15 +25,6 @@
           <p>It's far too easy to get lost in the fact that ETFs can be massive baskets of other assets - let's see what's inside!</p>
         </div>
       </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <p>For my current retirement goal, I've chosen Betterment's <%= link_to 'Climate Impact', 'https://www.betterment.com/socially-responsible-climate-impact-portfolio' %> portfolio; mine currently has the following funds within it:</p>
-      <ul class="list-unstyled">
-        <%= render partial: 'link', collection: @funds, as: :fund, layout: 'list_item' %>
-      </ul>
     </div>
   </div>
 </div>

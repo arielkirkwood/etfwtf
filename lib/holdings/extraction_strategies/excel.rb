@@ -13,6 +13,8 @@ module Holdings
 
       def working_sheet
         worksheet.drop(self.class::ROWS_TO_DROP).map do |rubyxl_row|
+          next if rubyxl_row.blank?
+
           Hash[*self.class::HEADINGS.zip(rubyxl_row.cells.map { |cell| cell.respond_to?(:value) ? cell.value : nil }).flatten]
         end
       end
