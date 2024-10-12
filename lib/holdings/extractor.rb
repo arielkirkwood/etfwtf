@@ -53,8 +53,6 @@ module Holdings
                       ExtractionStrategies::Ishares.new(portfolio)
                     when 'TCW'
                       ExtractionStrategies::TCW.new(portfolio)
-                    when 'State Street'
-                      ExtractionStrategies::StateStreet.new(portfolio)
                     else
                       raise UnknownStrategyError, fund.manager
                     end
@@ -66,25 +64,22 @@ module Holdings
       attach_holdings_file
     end
 
-    def attach_holdings_file # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
+    def attach_holdings_file # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       case fund.manager.name
       when 'iShares'
-        raise unless file_via_agent.code == '200'
-
-        portfolio.holdings_file.attach(io: file_via_agent.body_io, filename: file_via_agent.filename, content_type: file_via_agent.response['content_type'])
+        begin
+          portfolio.holdings_file.attach(io: file_via_agent.body_io, filename: file_via_agent.filename, content_type: file_via_agent.response['content_type'])
+        rescue Mechanize::ResponseCodeError
+          filename = "#{fund.ticker.identifier}_holdings.csv"
+          portfolio.holdings_file.attach(io: File.open(filename), filename:)
+        end
       when 'TCW'
-        portfolio.holdings_file.attach(io: File.open('VOTE_holdings.xlsx'), filename: "#{fund.ticker.identifier}_holdings.xlsx")
-      when 'State Street'
-        io = case fund.ticker.identifier
-             when 'EEMX'
-               File.open('holdings-daily-us-en-eemx.xlsx')
-             when 'EFAX'
-               File.open('holdings-daily-us-en-efax.xlsx')
-             when 'SPYX'
-               File.open('holdings-daily-us-en-spyx.xlsx')
-             end
-
-        portfolio.holdings_file.attach(io:, filename: "#{fund.ticker.identifier}_holdings.xlsx")
+        begin
+          portfolio.holdings_file.attach(io: file_via_agent.body_io, filename: file_via_agent.filename, content_type: file_via_agent.response['content_type'])
+        rescue Mechanize::ResponseCodeError
+          filename = "#{fund.ticker.identifier}_holdings.xlsx"
+          portfolio.holdings_file.attach(io: File.open(filename), filename:)
+        end
       end
 
       portfolio.date = Time.zone.today

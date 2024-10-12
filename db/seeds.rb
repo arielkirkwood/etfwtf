@@ -29,6 +29,7 @@ exchanges.each do |row|
   )
 end
 
+nyse = Markets::Exchange.find('XNYS')
 nyse_arca = Markets::Exchange.iterated_search('NYSE ARCA').first
 nasdaq = Markets::Exchange.iterated_search('NASDAQ').first
 cboe = Markets::Exchange.iterated_search('Cboe BZX formerly known as BATS').first
@@ -36,7 +37,7 @@ cboe = Markets::Exchange.iterated_search('Cboe BZX formerly known as BATS').firs
 # Managers
 ishares = Assets::Manager.find_or_create_by!(name: 'iShares', holdings_link_text: 'Download Holdings', backup_holdings_link_text: 'Detailed Holdings and Analytics')
 tcw = Assets::Manager.find_or_create_by!(name: 'TCW', holdings_link_text: 'Download')
-state_street = Assets::Manager.find_or_create_by!(name: 'State Street', holdings_link_text: 'Daily')
+# state_street = Assets::Manager.find_or_create_by!(name: 'State Street', holdings_link_text: 'Daily')
 
 # Assets
 crbn_asset = Asset.find_or_create_by!(name: 'iShares MSCI ACWI Low Carbon Target ETF',
@@ -47,10 +48,10 @@ bgrn_asset = Asset.find_or_create_by!(name: 'iShares USD Green Bond ETF',
                                       type: 'ExchangeTradedFund',
                                       sector: 'Global Bond-USD Hedged',
                                       exchange: nyse_arca)
-stip_asset = Asset.find_or_create_by!(name: 'iShares 0-5 Year TIPS Bond ETF',
+esml_asset = Asset.find_or_create_by!(name: 'iShares ESG Aware MSCI USA Small-Cap ETF',
                                       type: 'ExchangeTradedFund',
-                                      sector: 'Inflation-Protected Bond',
-                                      exchange: nyse_arca)
+                                      sector: 'Small Blend',
+                                      exchange: cboe)
 emb_asset = Asset.find_or_create_by!(name: 'iShares J.P. Morgan USD Emerging Markets Bond ETF',
                                      type: 'ExchangeTradedFund',
                                      sector: 'Emerging Markets Bond',
@@ -59,36 +60,36 @@ emb_asset = Asset.find_or_create_by!(name: 'iShares J.P. Morgan USD Emerging Mar
 vote_asset = Asset.find_or_create_by!(name: 'TCW Transform 500 ETF',
                                       type: 'ExchangeTradedFund',
                                       sector: 'Large Blend',
-                                      exchange: cboe)
+                                      exchange: nyse)
 
-spyx_asset = Asset.find_or_create_by!(name: 'SPDR® S&P® 500 Fossil Fuel Reserves Free ETF',
-                                      type: 'ExchangeTradedFund',
-                                      sector: 'Large Blend',
-                                      exchange: nyse_arca)
-efax_asset = Asset.find_or_create_by!(name: 'SPDR® MSCI EAFE Fossil Fuel Reserves Free ETF',
-                                      type: 'ExchangeTradedFund',
-                                      sector: 'Foreign Large Blend',
-                                      exchange: nyse_arca)
-eemx_asset = Asset.find_or_create_by!(name: 'SPDR® MSCI Emerging Markets Fossil Fuel Reserves Free ETF',
-                                      type: 'ExchangeTradedFund',
-                                      sector: 'Diversified Emerging Markets',
-                                      exchange: nyse_arca)
+# spyx_asset = Asset.find_or_create_by!(name: 'SPDR® S&P® 500 Fossil Fuel Reserves Free ETF',
+#                                       type: 'ExchangeTradedFund',
+#                                       sector: 'Large Blend',
+#                                       exchange: nyse_arca)
+# efax_asset = Asset.find_or_create_by!(name: 'SPDR® MSCI EAFE Fossil Fuel Reserves Free ETF',
+#                                       type: 'ExchangeTradedFund',
+#                                       sector: 'Foreign Large Blend',
+#                                       exchange: nyse_arca)
+# eemx_asset = Asset.find_or_create_by!(name: 'SPDR® MSCI Emerging Markets Fossil Fuel Reserves Free ETF',
+#                                       type: 'ExchangeTradedFund',
+#                                       sector: 'Diversified Emerging Markets',
+#                                       exchange: nyse_arca)
 
 # Tickers & identifiers
 Assets::Ticker.find_or_create_by!(asset: crbn_asset, ticker: 'CRBN')
 Assets::Ticker.find_or_create_by!(asset: bgrn_asset, ticker: 'BGRN')
-Assets::Ticker.find_or_create_by!(asset: stip_asset, ticker: 'STIP')
+Assets::Ticker.find_or_create_by!(asset: esml_asset, ticker: 'ESML')
 Assets::Ticker.find_or_create_by!(asset: emb_asset, ticker: 'EMB')
 Assets::Ticker.find_or_create_by!(asset: vote_asset, ticker: 'VOTE')
 
-Assets::Ticker.find_or_create_by!(asset: spyx_asset, ticker: 'SPYX')
-Assets::ISIN.find_or_create_by!(asset: spyx_asset, isin: 'US78468R7961')
+# Assets::Ticker.find_or_create_by!(asset: spyx_asset, ticker: 'SPYX')
+# Assets::ISIN.find_or_create_by!(asset: spyx_asset, isin: 'US78468R7961')
 
-Assets::Ticker.find_or_create_by!(asset: efax_asset, ticker: 'EFAX')
-Assets::ISIN.find_or_create_by!(asset: efax_asset, isin: 'US78470E1064')
+# Assets::Ticker.find_or_create_by!(asset: efax_asset, ticker: 'EFAX')
+# Assets::ISIN.find_or_create_by!(asset: efax_asset, isin: 'US78470E1064')
 
-Assets::Ticker.find_or_create_by!(asset: eemx_asset, ticker: 'EEMX')
-Assets::ISIN.find_or_create_by!(asset: eemx_asset, isin: 'US78470E2054')
+# Assets::Ticker.find_or_create_by!(asset: eemx_asset, ticker: 'EEMX')
+# Assets::ISIN.find_or_create_by!(asset: eemx_asset, isin: 'US78470E2054')
 
 # Funds
 Fund.find_or_create_by!(
@@ -102,8 +103,9 @@ Fund.find_or_create_by!(
                      'prevention and control, sustainable water, green building, and climate adaptation.'
 )
 Fund.find_or_create_by!(
-  underlying_asset: stip_asset, manager: ishares, public_url: 'https://www.ishares.com/us/products/239450/',
-  betterment_detail: 'STIP is the selected ETF used to gain exposure to U.S. Inflation-Protected Bonds due to its competitive bid-ask spread, low expense ratio, and robust asset base.'
+  underlying_asset: esml_asset, manager: ishares, public_url: 'https://www.ishares.com/us/products/296644/',
+  betterment_detail: "This set of holdings offers exposure to small-cap growth stocks. This class of growth stocks helps to avoid over-weighting a portfolio's value tilt while also contributing " \
+                     "to a portfolio's size tilt. U.S. small cap stocks are typically defined as those companies with below $1 billion in market capitalization in the United States."
 )
 Fund.find_or_create_by!(
   underlying_asset: emb_asset, manager: ishares, public_url: 'https://www.ishares.com/us/products/239572/',
@@ -116,18 +118,18 @@ Fund.find_or_create_by!(
                      'focused corporate behavior.'
 )
 
-Fund.find_or_create_by!(
-  underlying_asset: spyx_asset, manager: state_street, public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-sp-500-fossil-fuel-reserves-free-etf-spyx',
-  betterment_detail: 'SPYX is the primary ETF used to gain exposure to fossil fuel reserves free stocks in U.S. markets.'
-)
-Fund.find_or_create_by!(
-  underlying_asset: efax_asset, manager: state_street, public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-msci-eafe-fossil-fuel-reserves-free-etf-efax',
-  betterment_detail: 'EFAX is the primary ETF used to gain exposure to fossil fuel reserves free stocks in international developed markets.'
-)
-Fund.find_or_create_by!(
-  underlying_asset: eemx_asset, manager: state_street, public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-msci-emerging-markets-fossil-fuel-reserves-free-etf-eemx',
-  betterment_detail: 'EEMX is the primary ETF used to gain exposure to fossil fuel reserve free stocks in emerging markets.'
-)
+# Fund.find_or_create_by!(
+#   underlying_asset: spyx_asset, manager: state_street, public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-sp-500-fossil-fuel-reserves-free-etf-spyx',
+#   betterment_detail: 'SPYX is the primary ETF used to gain exposure to fossil fuel reserves free stocks in U.S. markets.'
+# )
+# Fund.find_or_create_by!(
+#   underlying_asset: efax_asset, manager: state_street, public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-msci-eafe-fossil-fuel-reserves-free-etf-efax',
+#   betterment_detail: 'EFAX is the primary ETF used to gain exposure to fossil fuel reserves free stocks in international developed markets.'
+# )
+# Fund.find_or_create_by!(
+#   underlying_asset: eemx_asset, manager: state_street, public_url: 'https://www.ssga.com/us/en/individual/etfs/funds/spdr-msci-emerging-markets-fossil-fuel-reserves-free-etf-eemx',
+#   betterment_detail: 'EEMX is the primary ETF used to gain exposure to fossil fuel reserve free stocks in emerging markets.'
+# )
 
 # Non-fund asset seeds to help with first-time ingestion
 berkshire_hathaway = Equity.find_or_create_by!(name: 'BERKSHIRE HATHAWAY INC CL B', sector: 'Financials', exchange: nasdaq)

@@ -31,7 +31,8 @@
 
 /public/assets
 ISO10383_MIC.csv
-VOTE_holdings*.xlsx
+*_holdings.csv
+*_holdings*.xlsx
 holdings-*.xlsx
 
 # Ignore master key for decrypting credentials and more.
