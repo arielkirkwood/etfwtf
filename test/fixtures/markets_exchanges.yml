@@ -1,0 +1,8 @@
+nyse_arca:
+  market_identification_code: ARCX
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+  name: NYSE ARCA
+  operating_market_identification_code: XNYS
+  country: US
+  status: ACTIVE

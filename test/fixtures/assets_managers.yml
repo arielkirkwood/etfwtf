@@ -1,0 +1,7 @@
+ishares:
+  id: 585041561
+  name: iShares
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+  holdings_link_text: Download Holdings
+  backup_holdings_link_text: Detailed Holdings and Analytics
