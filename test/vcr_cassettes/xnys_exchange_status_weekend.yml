@@ -1,0 +1,37 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://trading-calendar.fly.dev/api/v1/markets/status?mic=XNYS
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v2.7.12
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sun, 27 Oct 2024 20:44:31 GMT
+      Server:
+      - Fly/9b9e2ecb (2024-10-21)
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 fly.io
+      Fly-Request-Id:
+      - 01JB7VJAA32QB0SG94QGSHVK0M-lga
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"mic":"XNYS","day_of_week":"Sunday","is_weekend":true,"is_business_day":false,"status":"Closed","is_early_close":false,"local_time":"2024-10-27T16:44:31-04:00"}]'
+  recorded_at: Sun, 27 Oct 2024 20:44:31 GMT
+recorded_with: VCR 6.3.1

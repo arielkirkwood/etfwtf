@@ -10,7 +10,7 @@ module Holdings
 
     def initialize(fund)
       @fund = fund
-      @portfolio = fund.portfolios.any? ? fund.latest_portfolio : fund.portfolios.build
+      @portfolio = fund.latest_portfolio || fund.portfolios.build
 
       replace_portfolio if Rails.env.production? || conditions_warrant_replacement?
     end

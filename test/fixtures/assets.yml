@@ -3,3 +3,9 @@ crbn:
   type: ExchangeTradedFund
   sector: Global Large-Stock Blend
   market_identification_code: ARCX
+
+brkb:
+  name: BERKSHIRE HATHAWAY INC CL B
+  type: Equity
+  sector: Financials
+  market_identification_code: XNAS
