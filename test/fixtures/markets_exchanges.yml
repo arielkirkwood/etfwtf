@@ -6,3 +6,21 @@ nyse_arca:
   operating_market_identification_code: XNYS
   country: US
   status: ACTIVE
+
+nyse:
+  market_identification_code: XNYS
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+  name: NEW YORK STOCK EXCHANGE, INC.
+  operating_market_identification_code: XNYS
+  country: US
+  status: ACTIVE
+
+nasdaq:
+  market_identification_code: XNAS
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+  name: NASDAQ - ALL MARKETS
+  operating_market_identification_code: XNAS
+  country: US
+  status: ACTIVE
