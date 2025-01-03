@@ -32,8 +32,11 @@
 /public/assets
 ISO10383_MIC.csv
 *_holdings.csv
+!test/fixtures/files/*_holdings.csv
 *_holdings*.xlsx
+!test/fixtures/files/*_holdings*.xlsx
 holdings-*.xlsx
+!test/fixtures/files/holdings-*.xlsx
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key

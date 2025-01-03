@@ -13,7 +13,6 @@ class Fund < ApplicationRecord
   has_many :holdings, through: :portfolios
   has_many :assets, through: :holdings
 
-  delegate :extract_holdings, to: :holdings_extractor
   delegate :name, :type, :sector, to: :underlying_asset
 
   validates :underlying_asset_id, uniqueness: true
@@ -42,9 +41,5 @@ class Fund < ApplicationRecord
 
   def solution(mic)
     Markets::API::Status::MISSING_MICS[mic]
-  end
-
-  def holdings_extractor
-    @holdings_extractor ||= Holdings::Extractor.new(self)
   end
 end

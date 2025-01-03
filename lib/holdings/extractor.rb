@@ -10,11 +10,25 @@ module Holdings
 
     def initialize(fund)
       @fund = fund
-      @portfolio = fund.portfolios.any? ? fund.latest_portfolio : fund.portfolios.build
-
-      attach_holdings_file unless portfolio.holdings_file.attached?
+      @portfolio = fund.latest_portfolio || fund.portfolios.build
 
       replace_portfolio if Rails.env.production? || conditions_warrant_replacement?
+    end
+
+    def attach_holdings_file # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      file = file_via_agent
+      portfolio.holdings_file.attach(io: file.body_io, filename: file.filename, content_type: file.response['content_type'])
+    rescue Mechanize::ResponseCodeError
+      filename = case fund.manager.name
+                 when 'iShares'
+                   "#{fund.ticker.identifier}_holdings.csv"
+                 when 'TCW'
+                   "#{fund.ticker.identifier}_holdings.xlsx"
+                 end
+      portfolio.holdings_file.attach(io: File.open(filename), filename:)
+    ensure
+      portfolio.date = Time.zone.today
+      portfolio.save!
     end
 
     def extract_holdings # rubocop:disable Metrics/AbcSize
@@ -62,28 +76,6 @@ module Holdings
       portfolio.destroy
       @portfolio = fund.portfolios.build
       attach_holdings_file
-    end
-
-    def attach_holdings_file # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-      case fund.manager.name
-      when 'iShares'
-        begin
-          portfolio.holdings_file.attach(io: file_via_agent.body_io, filename: file_via_agent.filename, content_type: file_via_agent.response['content_type'])
-        rescue Mechanize::ResponseCodeError
-          filename = "#{fund.ticker.identifier}_holdings.csv"
-          portfolio.holdings_file.attach(io: File.open(filename), filename:)
-        end
-      when 'TCW'
-        begin
-          portfolio.holdings_file.attach(io: file_via_agent.body_io, filename: file_via_agent.filename, content_type: file_via_agent.response['content_type'])
-        rescue Mechanize::ResponseCodeError
-          filename = "#{fund.ticker.identifier}_holdings.xlsx"
-          portfolio.holdings_file.attach(io: File.open(filename), filename:)
-        end
-      end
-
-      portfolio.date = Time.zone.today
-      portfolio.save!
     end
 
     def file_via_agent # rubocop:disable Metrics/AbcSize
