@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '3.3.0'
+ruby '3.3.11'
 
 # Domain level dependencies
 gem 'mechanize', '~> 2.10' # mechanize fetches remote HTTP resources and handle file types selectively

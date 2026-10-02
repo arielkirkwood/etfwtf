@@ -4,7 +4,7 @@ Hello! This application is a "work sample" of sorts. I have built it to demonstr
 
 ## Ruby version
 
-This application runs on Ruby 3.3.0 at a minimum.
+This application runs on Ruby 3.3.11 at a minimum.
 
 ## System dependencies
 
